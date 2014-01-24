@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+#include "Event.h"
+#include "UndoManager.h"
+
+@interface ViewController : UIViewController <UITextViewDelegate>
+
+@property (nonatomic, strong) IBOutlet UITextView *textView;
+
+@property (nonatomic, strong) UndoManager *manager;
+
+- (IBAction)redoPressed:(id)sender;
+- (IBAction)undoPressed:(id)sender;
 
 @end

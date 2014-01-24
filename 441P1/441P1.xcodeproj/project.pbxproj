@@ -21,6 +21,8 @@
 		80DD3A141891D95000A1D22E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F61891D95000A1D22E /* UIKit.framework */; };
 		80DD3A1C1891D95000A1D22E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 80DD3A1A1891D95000A1D22E /* InfoPlist.strings */; };
 		80DD3A1E1891D95000A1D22E /* _41P1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DD3A1D1891D95000A1D22E /* _41P1Tests.m */; };
+		80DD3A291891DC6700A1D22E /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DD3A281891DC6700A1D22E /* Event.m */; };
+		80DD3A2C1891DF8A00A1D22E /* UndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DD3A2B1891DF8A00A1D22E /* UndoManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		80DD3A191891D95000A1D22E /* 441P1Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "441P1Tests-Info.plist"; sourceTree = "<group>"; };
 		80DD3A1B1891D95000A1D22E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		80DD3A1D1891D95000A1D22E /* _41P1Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _41P1Tests.m; sourceTree = "<group>"; };
+		80DD3A271891DC6700A1D22E /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		80DD3A281891DC6700A1D22E /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		80DD3A2A1891DF8A00A1D22E /* UndoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoManager.h; sourceTree = "<group>"; };
+		80DD3A2B1891DF8A00A1D22E /* UndoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UndoManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,10 @@
 				80DD3A041891D95000A1D22E /* Main.storyboard */,
 				80DD3A071891D95000A1D22E /* ViewController.h */,
 				80DD3A081891D95000A1D22E /* ViewController.m */,
+				80DD3A271891DC6700A1D22E /* Event.h */,
+				80DD3A281891DC6700A1D22E /* Event.m */,
+				80DD3A2A1891DF8A00A1D22E /* UndoManager.h */,
+				80DD3A2B1891DF8A00A1D22E /* UndoManager.m */,
 				80DD3A0A1891D95000A1D22E /* Images.xcassets */,
 				80DD39F91891D95000A1D22E /* Supporting Files */,
 			);
@@ -249,7 +259,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80DD3A291891DC6700A1D22E /* Event.m in Sources */,
 				80DD3A091891D95000A1D22E /* ViewController.m in Sources */,
+				80DD3A2C1891DF8A00A1D22E /* UndoManager.m in Sources */,
 				80DD3A031891D95000A1D22E /* AppDelegate.m in Sources */,
 				80DD39FF1891D95000A1D22E /* main.m in Sources */,
 			);
