@@ -1,0 +1,15 @@
+enum EventType {
+
+INSERT = 0;
+UNDO = 1;
+REDO = 2;
+}
+
+message TextEvent {
+	optional string text = 1;
+	optional int32 location = 2;
+	optional int64 user_id = 3;
+	optional EventType type = 4 [default = INSERT];
+
+}
+

@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-#include "Event.h"
+#include "TextEvent.h"
 #include "UndoManager.h"
+#include "CollabrifyManger.h"
 
 @interface ViewController : UIViewController <UITextViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UITextView *textView;
 
+@property (nonatomic, strong) CollabrifyManger *collabrifyManager;
 @property (nonatomic, strong) UndoManager *manager;
 
 - (IBAction)redoPressed:(id)sender;
