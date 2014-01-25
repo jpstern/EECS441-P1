@@ -10,13 +10,21 @@
 
 @implementation TextEvent
 
-- (id)init {
+- (id)initWithLocation:(NSInteger)loc andText:(NSString*)text {
     
     self = [super init];
     
-    _text = [[NSMutableString alloc] init];
+    _range = NSMakeRange(loc, text.length);
+    _text = [[NSString alloc] initWithString:text];
     
     return self;
+}
+
+- (void)setText:(NSString *)text {
+    
+    _range = NSMakeRange(_range.location, text.length);
+    
+    _text = [[NSString alloc] initWithString:text];
 }
 
 @end

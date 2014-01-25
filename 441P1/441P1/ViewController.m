@@ -28,15 +28,16 @@
     _textView.text = @"";
     _textView.autocorrectionType = UITextAutocorrectionTypeNo;
     _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    _textView.selectable = NO;
+
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Undo" style:UIBarButtonItemStylePlain target:self action:@selector(undoPressed:)];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStylePlain target:self action:@selector(exitSession:)], [[UIBarButtonItem alloc] initWithTitle:@"Redo" style:UIBarButtonItemStylePlain target:self action:@selector(redoPressed:)]];
     
     _currentEvent = [[TextEvent alloc] init];
+    _manager = [[UndoManager alloc] init];
     
-    _userUndoManager = [[NSUndoManager alloc] init];
-    [_userUndoManager registerUndoWithTarget:self selector:@selector(prepareEvent) object:_currentEvent];
+//    _userUndoManager = [[NSUndoManager alloc] init];
+//    [_userUndoManager registerUndoWithTarget:self selector:@selector(prepareEvent) object:_currentEvent];
     
     _collabrifyManager = [[CollabrifyManger alloc] init];
     
@@ -58,21 +59,23 @@
 
 - (void)prepareEvent {
     
-    
-    
-}
-
-- (void)sendEvent:(NSTimer*)timer {
-    
     if (_currentEvent.text.length > 0) {
         
         //send current event
         //add to undo stack
         
+        [_manager addEventToUndoStack:_currentEvent];
+        
         NSLog(@"sending text %@", _currentEvent.text);
         
         _currentEvent = nil;
     }
+
+}
+
+- (void)sendEvent:(NSTimer*)timer {
+    
+    
 }
 
 - (void)exitSession:(id)sender {
@@ -81,18 +84,31 @@
 }
 
 - (void)undoPressed:(id)sender {
+    
+    if (_manager.canUndo) {
+        TextEvent *event = [_manager undoEvent];
+        
+        NSRange range = event.range;
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText deleteCharactersInRange:range];
+        _textView.text = currentText;
+    }
 
-    TextEvent *event = [_manager undoEvent];
-    if (!_textView.undoManager.isRedoing && _textView.undoManager.canUndo)
-        [_textView.undoManager undo];
 }
 
 - (void)redoPressed:(id)sender {
     
-    TextEvent *event = [_manager redoEvent];
-    
-    if (!_textView.undoManager.isUndoing && _textView.undoManager.canRedo)
-        [_textView.undoManager redo];
+    if (_manager.canRedo) {
+        TextEvent *event = [_manager redoEvent];
+        
+        NSRange range = event.range;
+        NSString *text = event.text;
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText insertString:text atIndex:range.location];
+        _textView.text = currentText;
+    }
 }
 
 #pragma mark UITextView Methods
@@ -101,17 +117,20 @@
     
     [_eventTimer invalidate];
     _eventTimer = nil;
+
+    NSRange cursorPosition = [textView selectedRange];
     
+    NSLog(@"%lu", (unsigned long)cursorPosition.location);
     
-//    
     if (!_currentEvent) {
         
-        _currentEvent = [[TextEvent alloc] init];
-        [_textView.undoManager beginUndoGrouping];
+        _currentEvent = [[TextEvent alloc] initWithLocation:cursorPosition.location - 1 andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location - 1, 1)]];
     }
-//
-//    //do something
-//    [_currentEvent.text appendString:textView.text];
+    else {
+        [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
+    }
+
+    NSLog(@"%@", _currentEvent.text);
     
     [self createTimer];
     

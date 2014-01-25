@@ -11,6 +11,8 @@
 @interface TextEvent : NSObject
 
 @property (nonatomic, strong) NSString *text;
-@property (nonatomic, assign) NSRange *range;
+@property (nonatomic, assign) NSRange range;
+
+- (id)initWithLocation:(NSInteger)loc andText:(NSString*)text;
 
 @end

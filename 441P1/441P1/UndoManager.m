@@ -23,6 +23,16 @@
     return self;
 }
 
+- (BOOL)canUndo {
+    
+    return _undoStack.count > 0;
+}
+
+- (BOOL)canRedo {
+    
+    return _redoStack.count > 0;
+}
+
 - (void)addEventToUndoStack:(id)event {
     
     //lifo
@@ -31,7 +41,7 @@
 
 - (id)undoEvent {
     
-    id event = [[_undoStack lastObject] copy];
+    id event = [_undoStack lastObject];
     [_redoStack addObject:event];
     [_undoStack removeLastObject];
     
@@ -40,7 +50,8 @@
 
 - (id)redoEvent {
     
-    id event = [[_redoStack lastObject] copy];
+    id event = [_redoStack lastObject];
+    [_undoStack addObject:event];
     [_redoStack removeLastObject];
     
     return event;

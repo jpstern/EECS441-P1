@@ -16,7 +16,7 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
     
     self = [super init];
     
-    if (self) {
+    if (!self) {
         
         CollabrifyError *error = nil;
         CollabrifyClient *client = [[CollabrifyClient alloc] initWithGmail:@"jpstern@umich.edu"
@@ -95,6 +95,11 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
     [[self client] leaveAndEndSession:YES completionHandler:^(BOOL success, CollabrifyError *error) {
         
     }];
+}
+
+- (void)addEvent {
+    
+
 }
 
 #pragma mark Collabrify Delegate Methods

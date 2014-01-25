@@ -28,10 +28,10 @@
 		80E4728D18944C7E00363BFD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80E4728C18944C7E00363BFD /* SystemConfiguration.framework */; };
 		80E4728F18944C8A00363BFD /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 80E4728E18944C8A00363BFD /* libc++.dylib */; };
 		80E4729218944CBD00363BFD /* CollabrifyManger.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E4729118944CBD00363BFD /* CollabrifyManger.m */; };
-		80E4729618945BEA00363BFD /* textEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E4729318945BEA00363BFD /* textEvent.proto */; };
-		80E4729718945BEA00363BFD /* textEvent.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 80E4729518945BEA00363BFD /* textEvent.pb.cc */; };
 		80E472D418945F9200363BFD /* plugin.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472A718945F9200363BFD /* plugin.proto */; };
 		80E472D518945F9200363BFD /* descriptor.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472AC18945F9200363BFD /* descriptor.proto */; };
+		80E472DC189469DC00363BFD /* TextEvent.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 80E472D9189469DC00363BFD /* TextEvent.pb.cc */; };
+		80E472DD189469DC00363BFD /* TextEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472DB189469DC00363BFD /* TextEvent.proto */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,9 +75,6 @@
 		80E4728E18944C8A00363BFD /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		80E4729018944CBD00363BFD /* CollabrifyManger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollabrifyManger.h; sourceTree = "<group>"; };
 		80E4729118944CBD00363BFD /* CollabrifyManger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollabrifyManger.m; sourceTree = "<group>"; };
-		80E4729318945BEA00363BFD /* textEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = textEvent.proto; sourceTree = "<group>"; };
-		80E4729418945BEA00363BFD /* textEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textEvent.pb.h; sourceTree = "<group>"; };
-		80E4729518945BEA00363BFD /* textEvent.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = textEvent.pb.cc; sourceTree = "<group>"; };
 		80E4729D18945F9200363BFD /* code_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = code_generator.h; sourceTree = "<group>"; };
 		80E4729E18945F9200363BFD /* command_line_interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = command_line_interface.h; sourceTree = "<group>"; };
 		80E472A018945F9200363BFD /* cpp_generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpp_generator.h; sourceTree = "<group>"; };
@@ -128,6 +125,9 @@
 		80E472D118945F9200363BFD /* wire_format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format.h; sourceTree = "<group>"; };
 		80E472D218945F9200363BFD /* wire_format_lite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format_lite.h; sourceTree = "<group>"; };
 		80E472D318945F9200363BFD /* wire_format_lite_inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format_lite_inl.h; sourceTree = "<group>"; };
+		80E472D9189469DC00363BFD /* TextEvent.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEvent.pb.cc; sourceTree = "<group>"; };
+		80E472DA189469DC00363BFD /* TextEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEvent.pb.h; sourceTree = "<group>"; };
+		80E472DB189469DC00363BFD /* TextEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TextEvent.proto; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,9 +247,9 @@
 		80E4729818945BF800363BFD /* proto */ = {
 			isa = PBXGroup;
 			children = (
-				80E4729318945BEA00363BFD /* textEvent.proto */,
-				80E4729418945BEA00363BFD /* textEvent.pb.h */,
-				80E4729518945BEA00363BFD /* textEvent.pb.cc */,
+				80E472D9189469DC00363BFD /* TextEvent.pb.cc */,
+				80E472DA189469DC00363BFD /* TextEvent.pb.h */,
+				80E472DB189469DC00363BFD /* TextEvent.proto */,
 			);
 			name = proto;
 			sourceTree = "<group>";
@@ -453,9 +453,9 @@
 			files = (
 				80DD3A0B1891D95000A1D22E /* Images.xcassets in Resources */,
 				80DD39FD1891D95000A1D22E /* InfoPlist.strings in Resources */,
-				80E4729618945BEA00363BFD /* textEvent.proto in Resources */,
 				80E472D418945F9200363BFD /* plugin.proto in Resources */,
 				80DD3A061891D95000A1D22E /* Main.storyboard in Resources */,
+				80E472DD189469DC00363BFD /* TextEvent.proto in Resources */,
 				80E472D518945F9200363BFD /* descriptor.proto in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -479,8 +479,8 @@
 				80DD3A091891D95000A1D22E /* ViewController.m in Sources */,
 				80E4729218944CBD00363BFD /* CollabrifyManger.m in Sources */,
 				80DD3A2C1891DF8A00A1D22E /* UndoManager.m in Sources */,
-				80E4729718945BEA00363BFD /* textEvent.pb.cc in Sources */,
 				80DD3A031891D95000A1D22E /* AppDelegate.m in Sources */,
+				80E472DC189469DC00363BFD /* TextEvent.pb.cc in Sources */,
 				80DD39FF1891D95000A1D22E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -610,7 +610,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1/Collabrify\\ iOS",
 					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -623,7 +622,6 @@
 				INFOPLIST_FILE = "441P1/441P1-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1/Collabrify\\ iOS",
 					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -638,7 +636,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1/Collabrify\\ iOS",
 					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -651,7 +648,6 @@
 				INFOPLIST_FILE = "441P1/441P1-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1/Collabrify\\ iOS",
 					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

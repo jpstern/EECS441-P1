@@ -13,6 +13,9 @@
 @property (nonatomic, strong) NSMutableArray *undoStack;
 @property (nonatomic, strong) NSMutableArray *redoStack;
 
+@property (nonatomic, assign) BOOL canUndo;
+@property (nonatomic, assign) BOOL canRedo;
+
 #pragma mark undo methods
 
 - (void)addEventToUndoStack:(id)event;

@@ -1,8 +1,9 @@
 enum EventType {
 
 INSERT = 0;
-UNDO = 1;
-REDO = 2;
+DELETE = 1;
+UNDO = 2;
+REDO = 3;
 }
 
 message TextEvent {
