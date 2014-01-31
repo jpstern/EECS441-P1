@@ -28,6 +28,7 @@ using namespace std;
 
 @property (nonatomic, strong) CollabrifyParticipant *participant;
 @property (nonatomic, strong) CollabrifyClient *client;
+@property (nonatomic, strong) NSMutableArray *eventOrdering;
 
 - (void)leaveSession;
 
@@ -35,5 +36,7 @@ using namespace std;
 - (void)sendEvent:(Event *)event;
 - (NSData*)dataForEvent:(TextEvent*)event;
 - (TextEvent*)eventFromData:(NSData*)data;
+
+- (void)confirmEvent:(Event *)event;
 
 @end

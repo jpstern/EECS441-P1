@@ -108,6 +108,8 @@ using namespace std;
         //need to confirm my event
         
         NSLog(@"confirming own event");
+        
+        
     }
     else {
         //apply other event
