@@ -86,7 +86,14 @@ using namespace std;
     
     
     NSMutableString *string = [_activeText mutableCopy];
-    [string insertString:event.text atIndex:event.range.location];
+    if (event.range.location >= string.length) {
+        
+        NSLog(@"appending:%@", event.text);
+        
+        [string appendString:event.text];
+    }
+    else
+        [string insertString:event.text atIndex:event.range.location];
 //    [string replaceCharactersInRange:event.range withString:event.text];
     
     _disableChangeText = YES;
