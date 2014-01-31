@@ -86,16 +86,16 @@ using namespace std;
     //add event to global ordering array
     
     NSMutableString *string = [_activeText mutableCopy];
-    if (event.range.location >= string.length) {
-        
+//    if (event.range.location >= string.length) {
+    
         NSLog(@"appending:%@", event.text);
         
         [string appendString:event.text];
-    }
-    else {
-        [string insertString:event.text atIndex:event.range.location];
-        
-    }
+//    }
+//    else {
+//        [string insertString:event.text atIndex:event.range.location];
+//        
+//    }
     [_textView setText:string];
     _activeText = string;
 }

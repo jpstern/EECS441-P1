@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"4ggggddddffffllll10";
+NSString *SESSION_NAME = @"6ggggddddffffllll10";
 
 @implementation CollabrifyManger
 
@@ -217,14 +217,15 @@ NSString *SESSION_NAME = @"4ggggddddffffllll10";
     
     int64_t participant = textEvent->user_id();
     
-    for (Event *event in _eventOrdering) {
-        
-        if ([event.submissionID intValue] == submissionRegistrationID) {
+    if (submissionRegistrationID != -1) {
+        for (Event *event in _eventOrdering) {
             
-            event.orderID = @(orderID);
+            if ([event.submissionID intValue] == submissionRegistrationID) {
+                
+                event.orderID = @(orderID);
+            }
         }
     }
-    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
