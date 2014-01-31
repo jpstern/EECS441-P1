@@ -96,7 +96,7 @@ using namespace std;
         [string insertString:event.text atIndex:event.range.location];
 //    [string replaceCharactersInRange:event.range withString:event.text];
     
-    _disableChangeText = YES;
+//    _disableChangeText = YES;
     [_textView setText:string];
     _activeText = string;
 }
@@ -159,7 +159,7 @@ using namespace std;
 - (void)textViewDidChange:(UITextView *)textView {
 
     NSLog(@"text changed");
-    if (!_disableChangeText) {
+//    if (!_disableChangeText) {
         NSLog(@"in here");
         [_eventTimer invalidate];
         _eventTimer = nil;
@@ -197,9 +197,9 @@ using namespace std;
         _activeText = textView.text;
         
         [self createTimer];
-    }
+//    }
     
-    _disableChangeText = NO;
+//    _disableChangeText = NO;
 }
 
 @end
