@@ -109,6 +109,10 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
 
 - (void)reapplyEvents {
     
+    NSArray *array = [_eventOrdering valueForKey:@"text"];
+    
+    NSLog(@"%@", array);
+    
     [_eventOrdering sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
         if ([obj1 orderID] > [obj2 orderID]) return NSOrderedDescending;
@@ -116,6 +120,10 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
         return NSOrderedAscending;
         
     }];
+    
+    NSArray *array2 = [_eventOrdering valueForKey:@"text"];
+    
+    NSLog(@"%@", array2);
 
     for (Event *event in _eventOrdering) {
         
