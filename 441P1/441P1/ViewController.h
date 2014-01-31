@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#include "TextEvent.h"
+#include "Event.h"
 #include "UndoManager.h"
 #include "CollabrifyManger.h"
 
-@interface ViewController : UIViewController <UITextViewDelegate>
+@interface ViewController : UIViewController <UITextViewDelegate, CollabrifyProtocol>
 
 @property (nonatomic, strong) IBOutlet UITextView *textView;
 

@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TextEvent : NSObject
+@interface Event : NSObject
 
+
+@property (nonatomic) BOOL confirmed;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) NSRange range;
+@property (nonatomic, assign) int64_t participantID;
 
 - (id)initWithLocation:(NSInteger)loc andText:(NSString*)text;
 

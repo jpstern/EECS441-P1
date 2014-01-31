@@ -8,7 +8,8 @@
 
 #import "CollabrifyManger.h"
 
-NSString *SESSION_NAME = @"89021390kldalksdjlsa";
+
+NSString *SESSION_NAME = @"SASD3";
 
 @implementation CollabrifyManger
 
@@ -16,7 +17,7 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
     
     self = [super init];
     
-    if (!self) {
+    if (self) {
         
         CollabrifyError *error = nil;
         CollabrifyClient *client = [[CollabrifyClient alloc] initWithGmail:@"jpstern@umich.edu"
@@ -28,6 +29,8 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
 
         [self setClient:client];
         
+//        SESSION_NAME = [NSString stringWithFormat:@"%@%@", SESSION_NAME, [@(rand() % 1231232) stringValue]];
+        
         [self findSession]; //joins session or creates session
     }
     
@@ -35,6 +38,7 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
 }
 
 - (void)createSession {
+    
     
     [[self client] createSessionWithName:SESSION_NAME
                                 password:nil tags:@[@"EECS441"]
@@ -62,7 +66,7 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
                           
                           for (CollabrifySession *session in sessions) {
                               
-                              if (session.sessionName == SESSION_NAME) {
+                              if ([session.sessionName isEqualToString:SESSION_NAME] && !session.hasEnded) {
                                   
                                   [self joinSession:session];
                                   sessionFound = YES;
@@ -86,6 +90,8 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
                        
                        if (!error) {
                            //update your interface;
+                           
+                           NSLog(@"%d", baseFileSize);
                        }
                    }];
 }
@@ -97,9 +103,36 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
     }];
 }
 
-- (void)addEvent {
-    
+#pragma sending data
 
+- (void)sendEvent:(Event *)event {
+    
+    TextEvent *textEvent = new TextEvent();
+    textEvent->set_text([event.text cStringUsingEncoding:NSUTF8StringEncoding]);
+    textEvent->set_user_id(self.client.participantID);
+    textEvent->set_location((int32_t)event.range.location);
+    
+    std::string x = textEvent->DebugString();
+    NSData *rawEvent = [self dataForEvent:textEvent];
+    
+    NSLog(@"order id : %d", [self.client broadcast:rawEvent eventType:nil]);
+    
+}
+
+- (TextEvent *)eventFromData:(NSData *)data {
+    
+    int len = (int)[data length];
+    char raw[len];
+    TextEvent *event = new TextEvent();
+    [data getBytes:raw length:len];
+    event->ParseFromArray(raw, len);
+    return event;
+}
+
+- (NSData *)dataForEvent:(TextEvent *)event {
+    
+    std::string ps = event->SerializeAsString();
+    return [NSData dataWithBytes:ps.c_str() length:ps.size()];
 }
 
 #pragma mark Collabrify Delegate Methods
@@ -112,9 +145,21 @@ NSString *SESSION_NAME = @"89021390kldalksdjlsa";
 
 - (void)client:(CollabrifyClient *)client receivedEventWithOrderID:(int64_t)orderID submissionRegistrationID:(int32_t)submissionRegistrationID eventType:(NSString *)eventType data:(NSData *)data {
     
-    NSString *chatMessage = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    TextEvent *textEvent = [self eventFromData:data];
     
-    NSLog(@"%@", chatMessage);
+    cout << orderID << " receiving : " << textEvent->text().c_str() << endl;
+    
+    NSString *text = [NSString stringWithCString:textEvent->text().c_str() encoding:NSUTF8StringEncoding];
+    Event *event = [[Event alloc] init];
+    event.text = text;
+    event.participantID = textEvent->user_id();
+    event.range = NSMakeRange(textEvent->location(), text.length);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+       
+        [_delegate recievedEvent:event];
+    });
+    //call received
     
 }
 

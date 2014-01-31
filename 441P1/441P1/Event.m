@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Josh. All rights reserved.
 //
 
-#import "TextEvent.h"
+#import "Event.h"
 
-@implementation TextEvent
+@implementation Event
 
 - (id)initWithLocation:(NSInteger)loc andText:(NSString*)text {
     
