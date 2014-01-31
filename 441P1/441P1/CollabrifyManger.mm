@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"4ggggddddffffll";
+NSString *SESSION_NAME = @"4ggggddddfffflll";
 
 @implementation CollabrifyManger
 
@@ -167,9 +167,9 @@ NSString *SESSION_NAME = @"4ggggddddffffll";
     std::string x = textEvent->DebugString();
     NSData *rawEvent = [self dataForEvent:textEvent];
     
-    int32_t orderID = [self.client broadcast:rawEvent eventType:nil];
+    int32_t submissionID = [self.client broadcast:rawEvent eventType:nil];
     
-    event.orderID = orderID;
+    event.submissionID = submissionID;
     
 }
 
@@ -208,6 +208,8 @@ NSString *SESSION_NAME = @"4ggggddddffffll";
     event.text = text;
     event.participantID = textEvent->user_id();
     event.range = NSMakeRange(textEvent->location(), text.length);
+    event.orderID = orderID;
+    event.submissionID = submissionRegistrationID;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         

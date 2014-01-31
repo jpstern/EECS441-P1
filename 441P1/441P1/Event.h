@@ -15,7 +15,8 @@
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) NSRange range;
 @property (nonatomic, assign) int64_t participantID;
-@property (nonatomic, assign) int32_t orderID;
+@property (nonatomic, assign) int32_t submissionID;
+@property (nonatomic, assign) int64_t orderID;
 
 - (id)initWithLocation:(NSInteger)loc andText:(NSString*)text;
 
