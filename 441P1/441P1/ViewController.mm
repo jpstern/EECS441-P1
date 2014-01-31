@@ -102,21 +102,10 @@ using namespace std;
 
 - (void)recievedEvent:(Event *)event {
     
-    [_events addObject:event];
-    
-    if (event.participantID == _collabrifyManager.client.participantID) {
-        //need to confirm my event
-        
-        NSLog(@"confirming own event");
-        
-        [_collabrifyManager unwindEvents];
-    }
-    else {
-        //apply other event
-        
-        [self applyEvent:event];
-    }
-    
+//    [_events addObject:event];
+
+    [self applyEvent:event];
+
 //    if (_collabrifyManager.client.participantID ise
     
 }

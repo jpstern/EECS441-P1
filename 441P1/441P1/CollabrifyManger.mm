@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"4ggggddddfff";
+NSString *SESSION_NAME = @"4ggggddddffff";
 
 @implementation CollabrifyManger
 
@@ -210,12 +210,20 @@ NSString *SESSION_NAME = @"4ggggddddfff";
     event.range = NSMakeRange(textEvent->location(), text.length);
     
     dispatch_async(dispatch_get_main_queue(), ^{
-     
-        event.confirmed=YES;
         
-        [_eventOrdering addObject:event];
-        
-        [_delegate recievedEvent:event];
+        if (event.participantID == self.client.participantID) {
+            //need to confirm my event
+            
+            NSLog(@"confirming own event");
+            
+            [self unwindEvents];
+        }
+        else {
+            
+            [_eventOrdering addObject:event];
+            
+            [_delegate recievedEvent:event];
+        }
     });
     //call received
     
