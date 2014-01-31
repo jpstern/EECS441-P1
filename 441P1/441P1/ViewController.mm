@@ -80,6 +80,10 @@ using namespace std;
 }
 
 - (void)applyEvent:(Event *)event {
+    NSLog(@"active text is: %@", _textView.text);
+    NSLog(@"current text is: %@", _textView.text);
+    NSLog(@"applying text: %@", event.text);
+    
     
     NSMutableString *string = [_activeText mutableCopy];
     [string insertString:event.text atIndex:event.range.location];
