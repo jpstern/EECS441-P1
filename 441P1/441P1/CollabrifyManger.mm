@@ -19,6 +19,8 @@ NSString *SESSION_NAME = @"4ggggddddfff";
     
     if (self) {
         
+        _eventOrdering = [[NSMutableArray alloc] init];
+        
         CollabrifyError *error = nil;
         CollabrifyClient *client = [[CollabrifyClient alloc] initWithGmail:@"jpstern@umich.edu"
                                                                displayName:@"Josh+Neil+Pauline"
@@ -107,6 +109,10 @@ NSString *SESSION_NAME = @"4ggggddddfff";
 
 - (void)sendEvent:(Event *)event {
     
+    event.confirmed=NO;
+
+    [_eventOrdering addObject:event];
+    
     TextEvent *textEvent = new TextEvent();
     textEvent->set_text([event.text cStringUsingEncoding:NSUTF8StringEncoding]);
     textEvent->set_user_id(self.client.participantID);
@@ -156,7 +162,11 @@ NSString *SESSION_NAME = @"4ggggddddfff";
     event.range = NSMakeRange(textEvent->location(), text.length);
     
     dispatch_async(dispatch_get_main_queue(), ^{
-       
+     
+        event.confirmed=YES;
+        
+        [_eventOrdering addObject:event];
+        
         [_delegate recievedEvent:event];
     });
     //call received
