@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"4ggggddddfffflll";
+NSString *SESSION_NAME = @"4ggggddddffffllll10";
 
 @implementation CollabrifyManger
 
@@ -115,9 +115,13 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
     
     [_eventOrdering sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
-        if ([obj1 orderID] > [obj2 orderID]) return NSOrderedDescending;
+        if ([obj1 orderID] == nil || [obj2 orderID] == nil) {
+            
+            return [[obj1 submissionID] compare:[obj2 submissionID]];
+        }
         
-        return NSOrderedAscending;
+        return [[obj1 orderID] compare:[obj2 orderID]];
+        
         
     }];
     
@@ -150,7 +154,7 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
 
 - (void)unwindEvents {
     
-    for (Event *event in [[_eventOrdering copy] reverseObjectEnumerator]) {
+    for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
     
         [_delegate undoEvent:event];
         
@@ -177,7 +181,7 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
     
     int32_t submissionID = [self.client broadcast:rawEvent eventType:nil];
     
-    event.submissionID = submissionID;
+    event.submissionID = @(submissionID);
     
 }
 
@@ -211,17 +215,20 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
     
     cout << orderID << " receiving : " << textEvent->text().c_str() << endl;
     
-    NSString *text = [NSString stringWithCString:textEvent->text().c_str() encoding:NSUTF8StringEncoding];
-    Event *event = [[Event alloc] init];
-    event.text = text;
-    event.participantID = textEvent->user_id();
-    event.range = NSMakeRange(textEvent->location(), text.length);
-    event.orderID = orderID;
-    event.submissionID = submissionRegistrationID;
+    int64_t participant = textEvent->user_id();
+    
+    for (Event *event in _eventOrdering) {
+        
+        if ([event.submissionID intValue] == submissionRegistrationID) {
+            
+            event.orderID = @(orderID);
+        }
+    }
+    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (event.participantID == self.client.participantID) {
+        if (participant == self.client.participantID) {
             //need to confirm my event
             
             NSLog(@"confirming own event");
@@ -229,6 +236,14 @@ NSString *SESSION_NAME = @"4ggggddddfffflll";
             [self unwindEvents];
         }
         else {
+            
+            NSString *text = [NSString stringWithCString:textEvent->text().c_str() encoding:NSUTF8StringEncoding];
+            Event *event = [[Event alloc] init];
+            event.text = text;
+            event.participantID = @(participant);
+            event.range = NSMakeRange(textEvent->location(), text.length);
+            event.orderID = @(orderID);
+            event.submissionID = @(submissionRegistrationID);
             
             [_eventOrdering addObject:event];
             
