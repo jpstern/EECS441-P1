@@ -105,6 +105,52 @@ NSString *SESSION_NAME = @"4ggggddddfff";
     }];
 }
 
+#pragma mark confirming events/global ordering
+
+- (void)reapplyEvents {
+    
+    [_eventOrdering sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        
+        if ([obj1 orderID] > [obj2 orderID]) return NSOrderedDescending;
+        
+        return NSOrderedAscending;
+        
+    }];
+
+    for (Event *event in _eventOrdering) {
+        
+        [_delegate applyEvent:event];
+    }
+    
+    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+     
+        if ([obj confirmed] == NO) return YES;
+        
+        return NO;
+    }];
+    
+    if (index == NSNotFound) {
+        
+        [_eventOrdering removeAllObjects];
+    }
+    else {
+        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
+        
+    }
+    
+}
+
+- (void)unwindEvents {
+    
+    for (Event *event in [[_eventOrdering copy] reverseObjectEnumerator]) {
+    
+        [_delegate undoEvent:event];
+        
+    }
+    
+    [self reapplyEvents];
+}
+
 #pragma sending data
 
 - (void)sendEvent:(Event *)event {
@@ -121,7 +167,9 @@ NSString *SESSION_NAME = @"4ggggddddfff";
     std::string x = textEvent->DebugString();
     NSData *rawEvent = [self dataForEvent:textEvent];
     
-    NSLog(@"order id : %d", [self.client broadcast:rawEvent eventType:nil]);
+    int32_t orderID = [self.client broadcast:rawEvent eventType:nil];
+    
+    event.orderID = orderID;
     
 }
 

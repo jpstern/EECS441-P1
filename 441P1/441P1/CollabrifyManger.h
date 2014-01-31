@@ -19,6 +19,8 @@ using namespace std;
 @protocol CollabrifyProtocol <NSObject>
 
 - (void)recievedEvent:(Event*)event;
+- (void)applyEvent:(Event *)event;
+- (void)undoEvent:(Event*)event;
 
 @end
 
@@ -28,15 +30,16 @@ using namespace std;
 
 @property (nonatomic, strong) CollabrifyParticipant *participant;
 @property (nonatomic, strong) CollabrifyClient *client;
+
 @property (nonatomic, strong) NSMutableArray *eventOrdering;
 
 - (void)leaveSession;
 
-
+- (void)unwindEvents;
 - (void)sendEvent:(Event *)event;
 - (NSData*)dataForEvent:(TextEvent*)event;
 - (TextEvent*)eventFromData:(NSData*)data;
 
-- (void)confirmEvent:(Event *)event;
+
 
 @end

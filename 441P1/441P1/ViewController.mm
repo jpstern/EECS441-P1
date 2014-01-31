@@ -109,7 +109,7 @@ using namespace std;
         
         NSLog(@"confirming own event");
         
-        
+        [_collabrifyManager unwindEvents];
     }
     else {
         //apply other event
@@ -126,16 +126,24 @@ using namespace std;
     [_collabrifyManager leaveSession];
 }
 
+- (void)undoEvent:(Event*)event {
+    
+    NSRange range = event.range;
+    
+    NSMutableString *currentText = [_textView.text mutableCopy];
+    [currentText deleteCharactersInRange:range];
+    _textView.text = currentText;
+
+}
+
 - (void)undoPressed:(id)sender {
     
     if (_manager.canUndo) {
+        
         Event *event = [_manager undoEvent];
         
-        NSRange range = event.range;
+        [self undoEvent:event];
         
-        NSMutableString *currentText = [_textView.text mutableCopy];
-        [currentText deleteCharactersInRange:range];
-        _textView.text = currentText;
     }
 
 }
