@@ -190,7 +190,7 @@ using namespace std;
                 
                 NSLog(@"setting text to: %@", _currentEvent.text);
             }
-            
+             
         }
         
         _activeText = textView.text;
