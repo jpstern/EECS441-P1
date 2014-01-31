@@ -180,6 +180,8 @@ using namespace std;
             }
             else {
                 [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
+                
+                NSLog(@"setting text to: %@", _currentEvent.text);
             }
             
         }
