@@ -610,7 +610,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
+					"$(SRCROOT)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "441P1/441P1-Prefix.pch";
@@ -622,7 +622,7 @@
 				INFOPLIST_FILE = "441P1/441P1-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
+					"$(SRCROOT)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -636,7 +636,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
+					"$(SRCROOT)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "441P1/441P1-Prefix.pch";
@@ -648,7 +648,7 @@
 				INFOPLIST_FILE = "441P1/441P1-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/JoshStern/Documents/EECS441/EECS441-P1/441P1",
+					"$(SRCROOT)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
