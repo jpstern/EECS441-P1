@@ -30,6 +30,7 @@ using namespace std;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+
     _textView.text = @"";
     _activeText = @"";
     _textView.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -38,7 +39,6 @@ using namespace std;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Undo" style:UIBarButtonItemStylePlain target:self action:@selector(undoPressed:)];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStylePlain target:self action:@selector(exitSession:)], [[UIBarButtonItem alloc] initWithTitle:@"Redo" style:UIBarButtonItemStylePlain target:self action:@selector(redoPressed:)]];
     
-    _currentEvent = [[Event alloc] init];
     _manager = [[UndoManager alloc] init];
     _collabrifyManager = [[CollabrifyManger alloc] init];
     _collabrifyManager.delegate = self;
