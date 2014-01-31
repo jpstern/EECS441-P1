@@ -157,9 +157,10 @@ using namespace std;
 
 
 - (void)textViewDidChange:(UITextView *)textView {
-    
+
+    NSLog(@"text changed");
     if (!_disableChangeText) {
-        
+        NSLog(@"in here");
         [_eventTimer invalidate];
         _eventTimer = nil;
         
