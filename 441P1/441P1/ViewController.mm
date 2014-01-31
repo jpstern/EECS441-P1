@@ -168,7 +168,7 @@ using namespace std;
         
         NSLog(@"%lu", (unsigned long)cursorPosition.location);
         
-        if (cursorPosition.location < _activeText.length) {
+        if (_activeText.length > textView.text.length) {
             
             NSLog(@"delete occured");
             
