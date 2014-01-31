@@ -19,8 +19,6 @@ using namespace std;
 
 @property (nonatomic, strong) NSMutableArray *events;
 
-@property (nonatomic, assign) BOOL disableChangeText;
-
 @end
 
 @implementation ViewController
@@ -71,6 +69,7 @@ using namespace std;
         
         NSLog(@"sending text %@", _currentEvent.text);
         
+        //add event to global ordering array
         [_collabrifyManager sendEvent:_currentEvent];
         
         _currentEvent = nil;
@@ -80,10 +79,11 @@ using namespace std;
 }
 
 - (void)applyEvent:(Event *)event {
+    
     NSLog(@"active text is: %@", _textView.text);
     NSLog(@"current text is: %@", _textView.text);
     NSLog(@"applying text: %@", event.text);
-    
+    //add event to global ordering array
     
     NSMutableString *string = [_activeText mutableCopy];
     if (event.range.location >= string.length) {
@@ -92,11 +92,10 @@ using namespace std;
         
         [string appendString:event.text];
     }
-    else
+    else {
         [string insertString:event.text atIndex:event.range.location];
-//    [string replaceCharactersInRange:event.range withString:event.text];
-    
-//    _disableChangeText = YES;
+        
+    }
     [_textView setText:string];
     _activeText = string;
 }
