@@ -122,7 +122,7 @@ using namespace std;
     NSMutableString *currentText = [_textView.text mutableCopy];
     [currentText deleteCharactersInRange:range];
     _textView.text = currentText;
-
+    _activeText=currentText;
 }
 
 - (void)undoPressed:(id)sender {
