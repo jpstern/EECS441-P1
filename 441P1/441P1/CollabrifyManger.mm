@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g0001";
+NSString *SESSION_NAME = @"g0003";
 
 @implementation CollabrifyManger
 
@@ -246,7 +246,7 @@ NSString *SESSION_NAME = @"g0001";
             
             [_eventOrdering addObject:event];
             
-            [_delegate recievedEvent:event];
+            [_delegate receivedEvent:event];
         }
         
         

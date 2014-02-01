@@ -18,7 +18,7 @@ using namespace std;
 
 @protocol CollabrifyProtocol <NSObject>
 
-- (void)recievedEvent:(Event*)event;
+- (void)receivedEvent:(Event*)event;
 - (void)applyEvent:(Event *)event;
 - (void)undoEvent:(Event*)event;
 

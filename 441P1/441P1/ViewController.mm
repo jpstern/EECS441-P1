@@ -79,6 +79,18 @@ using namespace std;
 
 }
 
+- (void)fixUndoStackForEvent:(Event*)undoneEvent {
+    
+    for (Event *event in _manager.undoStack) {
+        
+        if (undoneEvent.range.location < event.range.location) {
+            
+            event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+        }
+    }
+    
+}
+
 - (void)applyEvent:(Event *)event {
     
     NSLog(@"active text is: %@", _textView.text);
@@ -101,17 +113,20 @@ using namespace std;
     _activeText = string;
 }
 
-- (void)recievedEvent:(Event *)event {
+- (void)receivedEvent:(Event *)event {
     
 //    [_events addObject:event];
     
     if (event.type == INSERT) {
+        
+//        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
         [self applyEvent:event];
     }
     else if (event.type == UNDO) {
         
         [self undoEvent:event];
+        [self fixUndoStackForEvent:event];
     }
 
 //    if (_collabrifyManager.client.participantID ise
@@ -131,10 +146,18 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    NSMutableString *currentText = [_textView.text mutableCopy];
-    [currentText deleteCharactersInRange:range];
-    _textView.text = currentText;
-    _activeText=currentText;
+    @try {
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText deleteCharactersInRange:range];
+        _textView.text = currentText;
+        _activeText=currentText;
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
+    }
 }
 
 - (void)undoPressed:(id)sender {
