@@ -253,7 +253,7 @@ NSString *SESSION_NAME = @"g6";
             event.range = NSMakeRange(textEvent->location(), text.length);
             event.orderID = @(orderID);
             event.submissionID = @(submissionRegistrationID);
-            
+            event.type = textEvent->type();
             [_eventOrdering addObject:event];
             
             [_delegate recievedEvent:event];

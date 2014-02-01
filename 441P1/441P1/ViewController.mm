@@ -89,8 +89,8 @@ using namespace std;
 //    if (event.range.location >= string.length) {
     
         NSLog(@"appending:%@", event.text);
-        
-        [string appendString:event.text];
+    event.range = NSMakeRange(string.length, event.range.length);
+    [string appendString:event.text];
 //    }
 //    else {
 //        [string insertString:event.text atIndex:event.range.location];
@@ -103,8 +103,15 @@ using namespace std;
 - (void)recievedEvent:(Event *)event {
     
 //    [_events addObject:event];
-
-    [self applyEvent:event];
+    
+    if (event.type == INSERT) {
+        
+        [self applyEvent:event];
+    }
+    else if (event.type == UNDO) {
+        
+        [self undoEvent:event];
+    }
 
 //    if (_collabrifyManager.client.participantID ise
     
