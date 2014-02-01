@@ -18,7 +18,7 @@
 
 //#include "TextEvent.pb.h"
 
-@interface Event : NSObject
+@interface Event : NSObject <NSCopying>
 
 
 @property (nonatomic) BOOL confirmed;

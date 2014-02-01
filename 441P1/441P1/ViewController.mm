@@ -70,6 +70,7 @@ using namespace std;
         NSLog(@"sending text %@", _currentEvent.text);
         
         //add event to global ordering array
+                
         [_collabrifyManager sendEvent:_currentEvent];
         
         _currentEvent = nil;
@@ -140,10 +141,9 @@ using namespace std;
     
     if (_manager.canUndo) {
         
-        Event *event = [_manager getNextUndo];
+        Event *event = [[_manager getNextUndo] copy];
         event.type = UNDO;
-        [_collabrifyManager.eventOrdering addObject:event];
-        
+                
         [_collabrifyManager sendEvent:event];
 //        Event *event = [_manager undoEvent];
 //        [self undoEvent:event];
