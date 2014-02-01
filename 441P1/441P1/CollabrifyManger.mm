@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"6ggggddddffffllll10";
+NSString *SESSION_NAME = @"6ggggddddffffllll11";
 
 @implementation CollabrifyManger
 
@@ -115,13 +115,10 @@ NSString *SESSION_NAME = @"6ggggddddffffllll10";
     
     [_eventOrdering sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         
-        if ([obj1 orderID] == nil || [obj2 orderID] == nil) {
-            
-            return [[obj1 submissionID] compare:[obj2 submissionID]];
-        }
+        if ([obj1 orderID] == nil) return NSOrderedDescending;
+        if ([obj2 orderID] == nil) return NSOrderedAscending;
         
-        return [[obj1 orderID] compare:[obj2 orderID]];
-        
+        return [[obj1 orderID] compare:[obj2 orderID]];        
         
     }];
     
