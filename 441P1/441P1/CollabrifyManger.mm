@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g008";
+NSString *SESSION_NAME = @"g0001";
 
 @implementation CollabrifyManger
 
@@ -143,21 +143,6 @@ NSString *SESSION_NAME = @"g008";
         event.confirmed = YES;
     }
     
-    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-     
-        if ([obj confirmed] == NO) return YES;
-        
-        return NO;
-    }];
-    
-    if (index == NSNotFound) {
-        
-        [_eventOrdering removeAllObjects];
-    }
-    else {
-        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
-        
-    }
     
 }
 
@@ -263,6 +248,25 @@ NSString *SESSION_NAME = @"g008";
             
             [_delegate recievedEvent:event];
         }
+        
+        
+        NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+            
+            if ([obj confirmed] == NO) return YES;
+            
+            return NO;
+        }];
+        
+        if (index == NSNotFound) {
+            
+            [_eventOrdering removeAllObjects];
+        }
+        else {
+            _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
+            
+        }
+
+        
     });
     //call received
     
