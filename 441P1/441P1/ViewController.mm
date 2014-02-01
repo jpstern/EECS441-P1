@@ -133,6 +133,7 @@ using namespace std;
         event.type = UNDO;
         [_collabrifyManager.eventOrdering addObject:event];
         
+        [_collabrifyManager sendEvent:event];
 //        Event *event = [_manager undoEvent];
 //        [self undoEvent:event];
         
