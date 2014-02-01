@@ -126,6 +126,10 @@ using namespace std;
     
     NSRange range = event.range;
     
+    NSLog(@"%lu %lu", (unsigned long)
+          range.location, (unsigned long)range.length);
+    NSLog(@"%@", event.text);
+    
     NSMutableString *currentText = [_textView.text mutableCopy];
     [currentText deleteCharactersInRange:range];
     _textView.text = currentText;
