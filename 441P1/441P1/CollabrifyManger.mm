@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g2";
+NSString *SESSION_NAME = @"g4";
 
 @implementation CollabrifyManger
 
@@ -132,7 +132,13 @@ NSString *SESSION_NAME = @"g2";
 
     for (Event *event in _eventOrdering) {
         
-        [_delegate applyEvent:event];
+        if (event.type == INSERT) {
+            [_delegate applyEvent:event];
+        }
+        else if (event.type == UNDO) {
+            
+            [_delegate undoEvent:event];
+        }
     }
     
     NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {

@@ -129,9 +129,12 @@ using namespace std;
     
     if (_manager.canUndo) {
         
-        Event *event = [_manager undoEvent];
+        Event *event = [_manager getNextUndo];
+        event.type = UNDO;
+        [_collabrifyManager.eventOrdering addObject:event];
         
-        [self undoEvent:event];
+//        Event *event = [_manager undoEvent];
+//        [self undoEvent:event];
         
     }
 
@@ -183,6 +186,7 @@ using namespace std;
             if (!_currentEvent) {
                 
                 _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location - 1 andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location - 1, 1)]];
+                _currentEvent.type = INSERT;
             }
             else {
                 [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];

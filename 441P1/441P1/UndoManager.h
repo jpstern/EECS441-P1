@@ -20,6 +20,7 @@
 
 - (void)addEventToUndoStack:(id)event;
 - (id)undoEvent;
+- (id)getNextUndo;
 
 #pragma mark redo methods
 

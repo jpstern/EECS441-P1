@@ -39,6 +39,11 @@
     [_undoStack addObject:event];
 }
 
+- (id)getNextUndo {
+    
+    return [_undoStack lastObject];
+}
+
 - (id)undoEvent {
     
     id event = [_undoStack lastObject];

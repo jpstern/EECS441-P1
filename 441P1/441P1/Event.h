@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, EventType) {
+    
+    INSERT = 0,
+    DELETE = 1,
+    UNDO = 2,
+    REDO = 3
+};
+
 @interface Event : NSObject
 
 
@@ -17,6 +25,7 @@
 @property (nonatomic, strong) NSNumber *participantID;
 @property (nonatomic, strong) NSNumber *submissionID;
 @property (nonatomic, strong) NSNumber *orderID;
+@property (nonatomic, assign) EventType type;
 
 - (id)initWithLocation:(NSInteger)loc andText:(NSString*)text;
 
