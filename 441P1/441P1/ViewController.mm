@@ -125,11 +125,9 @@ using namespace std;
     }
     else if (event.type == UNDO) {
         
-        [self undoEvent:event];
+        [self undoEvent:event andRemoveFromStack:NO];
         [self fixUndoStackForEvent:event];
     }
-
-//    if (_collabrifyManager.client.participantID ise
     
 }
 
@@ -138,7 +136,9 @@ using namespace std;
     [_collabrifyManager leaveSession];
 }
 
-- (void)undoEvent:(Event*)event {
+- (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag {
+
+    if (flag) [_manager undoEvent];
     
     NSRange range = event.range;
     
@@ -146,18 +146,10 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    @try {
-        NSMutableString *currentText = [_textView.text mutableCopy];
-        [currentText deleteCharactersInRange:range];
-        _textView.text = currentText;
-        _activeText=currentText;
-    }
-    @catch (NSException *exception) {
-        
-    }
-    @finally {
-        
-    }
+    NSMutableString *currentText = [_textView.text mutableCopy];
+    [currentText deleteCharactersInRange:range];
+    _textView.text = currentText;
+    _activeText=currentText;
 }
 
 - (void)undoPressed:(id)sender {
