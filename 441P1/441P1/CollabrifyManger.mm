@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g5";
+NSString *SESSION_NAME = @"g6";
 
 @implementation CollabrifyManger
 
@@ -182,6 +182,7 @@ NSString *SESSION_NAME = @"g5";
     textEvent->set_text([event.text cStringUsingEncoding:NSUTF8StringEncoding]);
     textEvent->set_user_id(self.client.participantID);
     textEvent->set_location((int32_t)event.range.location);
+    textEvent->set_type((EventType)event.type);
     
     std::string x = textEvent->DebugString();
     NSData *rawEvent = [self dataForEvent:textEvent];
