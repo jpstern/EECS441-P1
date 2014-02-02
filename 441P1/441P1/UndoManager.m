@@ -64,8 +64,11 @@
     _pendingUndo --;
     
     id event = [_undoStack lastObject];
-    [_redoStack addObject:event];
-    [_undoStack removeLastObject];
+    if (event) {
+     
+        [_redoStack addObject:event];
+        [_undoStack removeLastObject];g
+    }
     
     return event;
 }
@@ -75,8 +78,10 @@
     _pendingRedo --;
     
     id event = [_redoStack lastObject];
-    [_undoStack addObject:event];
-    [_redoStack removeLastObject];
+    if (event) {
+        [_undoStack addObject:event];
+        [_redoStack removeLastObject];
+    }
     
     return event;
     

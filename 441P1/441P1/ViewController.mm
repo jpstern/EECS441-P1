@@ -245,7 +245,6 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    
     NSMutableString *currentText = [_textView.text mutableCopy];
     [currentText insertString:text atIndex:range.location];
     _textView.text = currentText;
