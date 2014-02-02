@@ -19,6 +19,8 @@ using namespace std;
 
 @property (nonatomic, strong) NSMutableArray *events;
 
+@property (nonatomic, strong) NSString *textBeforeEvent;
+
 @end
 
 @implementation ViewController
@@ -67,25 +69,57 @@ using namespace std;
 
 - (void)prepareEvent {
     
-    if (_currentEvent.text.length > 0) {
+    _currentEvent = [[Event alloc] init];
+    
+    if (_textBeforeEvent.length != _activeText.length) {
+        if (_textBeforeEvent.length < _activeText.length) {
+            
+            _currentEvent.type = INSERT;
+            _currentEvent.range = NSMakeRange(_textBeforeEvent.length, _activeText.length - _textBeforeEvent.length);
+            _currentEvent.text = [_activeText substringWithRange:_currentEvent.range];
+        }
+        else if (_textBeforeEvent.length > _activeText.length) {
+            
+            _currentEvent.type = DELETE;
+            _currentEvent.range = NSMakeRange(_activeText.length, _textBeforeEvent.length - _activeText.length);
+            _currentEvent.text = [_textBeforeEvent substringWithRange:_currentEvent.range];
+        }
         
-        //send current event
-        //add to undo stack
         
         [_manager addEventToUndoStack:_currentEvent];
         
         NSLog(@"sending text %@", _currentEvent.text);
         
         //add event to global ordering array
-                
+        
         [_collabrifyManager sendEvent:_currentEvent];
         
         _currentEvent = nil;
+        
+        _textBeforeEvent = _textView.text;
 
+        
+//        if (_currentEvent.text.length > 0) {
+//            
+//            //send current event
+//            //add to undo stack
+//            
+//            [_manager addEventToUndoStack:_currentEvent];
+//            
+//            NSLog(@"sending text %@", _currentEvent.text);
+//            
+//            //add event to global ordering array
+//            
+//            [_collabrifyManager sendEvent:_currentEvent];
+//            
+//            _currentEvent = nil;
+//            
+//            _textBeforeEvent = _textView.text;
+//            
+//        }
+        
+        [_collabrifyManager timerBecameInvalid];
     }
-    
-    [_collabrifyManager timerBecameInvalid];
-
 }
 
 - (void)fixUndoStackForEvent:(Event*)undoneEvent {
@@ -268,68 +302,72 @@ using namespace std;
 - (void)textViewDidChange:(UITextView *)textView {
 
     NSLog(@"text changed");
-//    if (!_disableChangeText) {
-        NSLog(@"in here");
-        [_eventTimer invalidate];
-        _eventTimer = nil;
-        
-        NSRange cursorPosition = [textView selectedRange];
-        
-        NSLog(@"%lu", (unsigned long)cursorPosition.location);
-        
-        if (_activeText.length > textView.text.length) {
-            
-            NSLog(@"delete occured");
-            
-            if (!_currentEvent) {
-                
-                //this location will be the start of the delete
-                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
-                _currentEvent.type = DELETE;
-                _currentEvent.del = YES;
-            }
-            else {
-                
-                _currentEvent.text = [NSString stringWithFormat:@"%@%@",[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)], _currentEvent.text];
-                _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.text.length);
-            }
-            
-            //        if (!_currentEvent) {
-            //
-            //            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
-            //        }
-            //        else {
-            //            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
-            //        }
-            
-            
-        }
-        else {
-            
-            
-            if (_currentEvent && _currentEvent.type == DELETE) {
-                
-                [self prepareEvent];
-            }
-            
-            if (!_currentEvent) {
-                
-                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location - 1 andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location - 1, 1)]];
-                _currentEvent.type = INSERT;
-            }
-            else {
-                [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
-                
-                NSLog(@"setting text to: %@", _currentEvent.text);
-            }
-        }
-        
-        _activeText = textView.text;
-        
-        [self createTimer];
+    NSLog(@"in here");
+    [_eventTimer invalidate];
+    _eventTimer = nil;
+    
+//    NSRange cursorPosition = [textView selectedRange];
+    
+//    if (!_currentEvent) {
+//        
+//        _currentEvent = [[Event alloc] init];
 //    }
     
-//    _disableChangeText = NO;
+    
+    
+//    
+//    NSLog(@"%lu", (unsigned long)cursorPosition.location);
+//    
+//    if (_activeText.length > textView.text.length) {
+//        
+//        NSLog(@"delete occured");
+//        
+//        if (!_currentEvent) {
+//            
+//            //this location will be the start of the delete
+//            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
+//            _currentEvent.type = DELETE;
+//            _currentEvent.del = YES;
+//        }
+//        else {
+//            
+//            _currentEvent.text = [NSString stringWithFormat:@"%@%@",[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)], _currentEvent.text];
+//            _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.text.length);
+//        }
+//        
+//        //        if (!_currentEvent) {
+//        //
+//        //            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
+//        //        }
+//        //        else {
+//        //            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
+//        //        }
+//        
+//        
+//    }
+//    else {
+//        
+//        
+//        if (_currentEvent && _currentEvent.type == DELETE) {
+//            
+//            [self prepareEvent];
+//        }
+//        
+//        if (!_currentEvent) {
+//            
+//            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location - 1 andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location - 1, 1)]];
+//            _currentEvent.type = INSERT;
+//        }
+//        else {
+//            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
+//            
+//            NSLog(@"setting text to: %@", _currentEvent.text);
+//        }
+//    }
+//    
+    _activeText = textView.text;
+    
+    [self createTimer];
 }
 
 @end
