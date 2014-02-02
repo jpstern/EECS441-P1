@@ -102,7 +102,7 @@ using namespace std;
 
 - (void)applyEvent:(Event *)event {
     
-    if (event.type == INSERT) {
+    if (event.type == INSERT || (event.type == REDO && event.del)) {
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
         NSLog(@"applying text: %@", event.text);
@@ -124,7 +124,7 @@ using namespace std;
         [_textView setText:string];
         _activeText = string;
     }
-    else if (event.type == DELETE) {
+    else if (event.type == DELETE || (event.type == REDO && !event.del)) {
         
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
@@ -205,7 +205,12 @@ using namespace std;
     else if (event.type == DELETE || (event.type == UNDO && event.del)) {
         
         NSMutableString *currentText = [_textView.text mutableCopy];
-        [currentText insertString:event.text atIndex:event.range.location];
+        if (currentText.length != 0)
+            [currentText insertString:event.text atIndex:event.range.location];
+        else {
+            currentText = [@"" mutableCopy];
+            [currentText appendString:event.text];
+        }
         _textView.text = currentText;
         _activeText = currentText;
     }
