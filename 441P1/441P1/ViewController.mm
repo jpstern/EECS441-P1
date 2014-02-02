@@ -278,7 +278,7 @@ using namespace std;
             if (!_currentEvent) {
                 
                 //this location will be the start of the delete
-                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:@" "];
+                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
                 _currentEvent.type = DELETE;
             }
             else {
