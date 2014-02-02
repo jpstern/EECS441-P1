@@ -120,6 +120,8 @@ using namespace std;
             NSLog(@"inserting:%@", event.text);
             [string insertString:event.text atIndex:event.range.location];
             
+            [self fixUndoStackForEvent:event];
+            
         }
         [_textView setText:string];
         _activeText = string;
