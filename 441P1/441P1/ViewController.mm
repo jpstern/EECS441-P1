@@ -196,13 +196,13 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    if (event.type == INSERT) {
+    if (event.type == INSERT || (event.type == UNDO && event.range.location >= _activeText.length)) {
         NSMutableString *currentText = [_textView.text mutableCopy];
         [currentText deleteCharactersInRange:range];
         _textView.text = currentText;
         _activeText=currentText;
     }
-    else if (event.type == DELETE) {
+    else if (event.type == DELETE || (event.type == UNDO && event.range.location >= _activeText.length)) {
         
         NSMutableString *currentText = [_textView.text mutableCopy];
         [currentText insertString:event.text atIndex:event.range.location];
