@@ -16,6 +16,8 @@
 @property (nonatomic, assign) BOOL canUndo;
 @property (nonatomic, assign) BOOL canRedo;
 
+@property (nonatomic, assign) NSInteger pendingUndo;
+
 #pragma mark undo methods
 
 - (void)addEventToUndoStack:(id)event;
@@ -24,6 +26,7 @@
 
 #pragma mark redo methods
 
+- (id)getNextRedo;
 - (id)redoEvent;
 
 @end

@@ -41,10 +41,23 @@
 
 - (id)getNextUndo {
     
-    return [_undoStack lastObject];
+    id event = _undoStack[_undoStack.count - 1 - _pendingUndo];
+    
+    _pendingUndo ++;
+    
+    return event;
+    
+//    return [_undoStack lastObject];
+}
+
+- (id)getNextRedo {
+    
+    return [_redoStack lastObject];
 }
 
 - (id)undoEvent {
+    
+    _pendingUndo --;
     
     id event = [_undoStack lastObject];
     [_redoStack addObject:event];

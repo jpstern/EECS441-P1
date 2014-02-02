@@ -128,7 +128,7 @@ using namespace std;
     
 //    [_events addObject:event];
     
-    if (event.type == INSERT) {
+    if (event.type == INSERT || event.type == REDO) {
         
 //        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
@@ -158,6 +158,7 @@ using namespace std;
     
     NSRange range = event.range;
     
+    NSLog(@"undo");
     NSLog(@"%lu %lu", (unsigned long)
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
@@ -183,17 +184,34 @@ using namespace std;
 
 }
 
+- (void)redoEvent:(Event*)event {
+    
+    [_manager redoEvent];
+    
+    NSRange range = event.range;
+    NSString *text = event.text;
+    
+    NSLog(@"redo");
+    NSLog(@"%lu %lu", (unsigned long)
+          range.location, (unsigned long)range.length);
+    NSLog(@"%@", event.text);
+    
+    
+    NSMutableString *currentText = [_textView.text mutableCopy];
+    [currentText insertString:text atIndex:range.location];
+    _textView.text = currentText;
+    
+}
+
 - (void)redoPressed:(id)sender {
     
     if (_manager.canRedo) {
-        Event *event = [_manager redoEvent];
+//        Event *event = [_manager redoEvent];
+        Event *event = [_manager getNextRedo];
+        event.type = REDO;
         
-        NSRange range = event.range;
-        NSString *text = event.text;
+        [_collabrifyManager sendEvent:event];
         
-        NSMutableString *currentText = [_textView.text mutableCopy];
-        [currentText insertString:text atIndex:range.location];
-        _textView.text = currentText;
     }
 }
 
