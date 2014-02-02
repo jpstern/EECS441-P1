@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g00002";
+NSString *SESSION_NAME = @"g00003";
 
 @interface CollabrifyManger ()
 
@@ -208,6 +208,8 @@ NSString *SESSION_NAME = @"g00002";
     
     for (Event *event in _pendingEvents) {
         
+        NSLog(@"processing pending event");
+        
         [self processRecievedEvent:event];
     }
     
@@ -258,6 +260,8 @@ NSString *SESSION_NAME = @"g00002";
     }
     else {
         
+        NSLog(@"timer is valid, adding to pending event");
+        
         [_pendingEvents addObject:event];
     }
     //call received
@@ -284,21 +288,21 @@ NSString *SESSION_NAME = @"g00002";
     }
     
     
-    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        
-        if ([obj confirmed] == NO) return YES;
-        
-        return NO;
-    }];
-    
-    if (index == NSNotFound) {
-        
-        [_eventOrdering removeAllObjects];
-    }
-    else {
-        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
-        
-    }
+//    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//        
+//        if ([obj confirmed] == NO) return YES;
+//        
+//        return NO;
+//    }];
+//    
+//    if (index == NSNotFound) {
+//        
+//        [_eventOrdering removeAllObjects];
+//    }
+//    else {
+//        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
+//        
+//    }
 }
 
 - (void)client:(CollabrifyClient *)client receivedBaseFile:(NSData *)baseFile {
