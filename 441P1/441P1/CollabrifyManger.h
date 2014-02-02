@@ -21,6 +21,7 @@ using namespace std;
 - (void)receivedEvent:(Event*)event;
 - (void)applyEvent:(Event *)event;
 - (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag;
+- (BOOL)isTimerValid;
 
 @end
 
@@ -39,6 +40,8 @@ using namespace std;
 - (void)sendEvent:(Event *)event;
 - (NSData*)dataForEvent:(TextEvent*)event;
 - (TextEvent*)eventFromData:(NSData*)data;
+
+- (void)timerBecameInvalid;
 
 
 

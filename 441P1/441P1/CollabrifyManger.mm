@@ -9,7 +9,13 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g0006";
+NSString *SESSION_NAME = @"g00002";
+
+@interface CollabrifyManger ()
+
+@property (nonatomic, strong) NSMutableArray *pendingEvents;
+
+@end
 
 @implementation CollabrifyManger
 
@@ -19,6 +25,7 @@ NSString *SESSION_NAME = @"g0006";
     
     if (self) {
         
+        _pendingEvents = [[NSMutableArray alloc] init];
         _eventOrdering = [[NSMutableArray alloc] init];
         
         CollabrifyError *error = nil;
@@ -197,6 +204,16 @@ NSString *SESSION_NAME = @"g0006";
     return [NSData dataWithBytes:ps.c_str() length:ps.size()];
 }
 
+- (void)timerBecameInvalid {
+    
+    for (Event *event in _pendingEvents) {
+        
+        [self processRecievedEvent:event];
+    }
+    
+    [_pendingEvents removeAllObjects];
+}
+
 #pragma mark Collabrify Delegate Methods
 
 - (void)client:(CollabrifyClient *)client encounteredError:(CollabrifyError *)error {
@@ -209,9 +226,18 @@ NSString *SESSION_NAME = @"g0006";
     
     TextEvent *textEvent = [self eventFromData:data];
     
-    cout << orderID << " receiving : " << textEvent->text().c_str() << endl;
-    
     int64_t participant = textEvent->user_id();
+    
+    NSString *text = [NSString stringWithCString:textEvent->text().c_str() encoding:NSUTF8StringEncoding];
+    Event *event = [[Event alloc] init];
+    event.text = text;
+    event.participantID = @(participant);
+    event.range = NSMakeRange(textEvent->location(), text.length);
+    event.orderID = @(orderID);
+    event.submissionID = @(submissionRegistrationID);
+    event.type = textEvent->type();
+    
+    cout << orderID << " receiving : " << textEvent->text().c_str() << endl;
     
     if (submissionRegistrationID != -1) {
         for (Event *event in _eventOrdering) {
@@ -223,53 +249,56 @@ NSString *SESSION_NAME = @"g0006";
         }
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+    if (![_delegate isTimerValid]) {
         
-        if (participant == self.client.participantID) {
-            //need to confirm my event
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            NSLog(@"confirming own event");
-            
-            [self unwindEvents];
-        }
-        else {
-            
-            NSString *text = [NSString stringWithCString:textEvent->text().c_str() encoding:NSUTF8StringEncoding];
-            Event *event = [[Event alloc] init];
-            event.text = text;
-            event.participantID = @(participant);
-            event.range = NSMakeRange(textEvent->location(), text.length);
-            event.orderID = @(orderID);
-            event.submissionID = @(submissionRegistrationID);
-            event.type = textEvent->type();
-            event.confirmed = YES;
-            
-            [_eventOrdering addObject:event];
-            
-            [_delegate receivedEvent:event];
-        }
+            [self processRecievedEvent:event];
+        });
+    }
+    else {
         
-        
-        NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-            
-            if ([obj confirmed] == NO) return YES;
-            
-            return NO;
-        }];
-        
-        if (index == NSNotFound) {
-            
-            [_eventOrdering removeAllObjects];
-        }
-        else {
-            _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
-            
-        }
-
-        
-    });
+        [_pendingEvents addObject:event];
+    }
     //call received
     
+}
+
+- (void)processRecievedEvent:(Event*)event {
+    
+    if ([event.participantID intValue] == self.client.participantID) {
+        //need to confirm my event
+        
+        NSLog(@"confirming own event");
+        
+        [self unwindEvents];
+    }
+    else {
+        
+        
+        event.confirmed = YES;
+        
+        [_eventOrdering addObject:event];
+        
+        [_delegate receivedEvent:event];
+    }
+    
+    
+    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if ([obj confirmed] == NO) return YES;
+        
+        return NO;
+    }];
+    
+    if (index == NSNotFound) {
+        
+        [_eventOrdering removeAllObjects];
+    }
+    else {
+        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
+        
+    }
 }
 
 - (void)client:(CollabrifyClient *)client receivedBaseFile:(NSData *)baseFile {

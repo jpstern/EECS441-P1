@@ -33,6 +33,8 @@ using namespace std;
     _activeText = @"";
     _textView.autocorrectionType = UITextAutocorrectionTypeNo;
     _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    
+    [_textView becomeFirstResponder];
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Undo" style:UIBarButtonItemStylePlain target:self action:@selector(undoPressed:)];
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStylePlain target:self action:@selector(exitSession:)], [[UIBarButtonItem alloc] initWithTitle:@"Redo" style:UIBarButtonItemStylePlain target:self action:@selector(redoPressed:)]];
@@ -76,6 +78,8 @@ using namespace std;
         _currentEvent = nil;
 
     }
+    
+    [_collabrifyManager timerBecameInvalid];
 
 }
 
@@ -136,6 +140,11 @@ using namespace std;
     [_collabrifyManager leaveSession];
 }
 
+- (BOOL)isTimerValid {
+
+    return _eventTimer.isValid;
+}
+
 - (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag {
 
     if (flag) [_manager undoEvent];
@@ -182,7 +191,6 @@ using namespace std;
 }
 
 #pragma mark UITextView Methods
-
 
 - (void)textViewDidChange:(UITextView *)textView {
 
