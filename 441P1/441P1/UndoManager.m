@@ -67,7 +67,7 @@
     if (event) {
      
         [_redoStack addObject:event];
-        [_undoStack removeLastObject];g
+        [_undoStack removeLastObject];
     }
     
     return event;
