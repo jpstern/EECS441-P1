@@ -131,6 +131,10 @@ using namespace std;
         NSLog(@"applying text: %@", event.text);
         //add event to global ordering array
         
+        NSLog(@"%lu %lu", (unsigned long)
+              event.range.location, (unsigned long)event.range.length);
+
+        
         NSMutableString *string = [_activeText mutableCopy];
         
         [string deleteCharactersInRange:event.range];
@@ -265,7 +269,7 @@ using namespace std;
             if (!_currentEvent) {
                 
                 //this location will be the start of the delete
-                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location + 1 andText:@" "];
+                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:@" "];
                 _currentEvent.type = DELETE;
             }
             else {
