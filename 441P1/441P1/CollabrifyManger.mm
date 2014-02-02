@@ -306,27 +306,29 @@ NSString *SESSION_NAME = @"g000000002";
         
         event.confirmed = YES;
         
+        [self fixEventOrderingForEvent:event];gi
+        
         [_eventOrdering addObject:event];
         
         [_delegate receivedEvent:event];
     }
+
+}
+
+- (void)fixEventOrderingForEvent:(Event*)newEvent {
     
-    
-//    NSUInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-//        
-//        if ([obj confirmed] == NO) return YES;
-//        
-//        return NO;
-//    }];
-//    
-//    if (index == NSNotFound) {
-//        
-//        [_eventOrdering removeAllObjects];
-//    }
-//    else {
-//        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
-//        
-//    }
+    for (Event *event in _eventOrdering) {
+        
+        if (event.confirmed == NO) {
+            
+            if (NSLocationInRange(newEvent.range.location, event.range)) {
+                
+                newEvent.range = NSMakeRange(event.range.location + event.range.length, newEvent.range.length);
+                
+                break;
+            }
+        }
+    }
 }
 
 - (void)client:(CollabrifyClient *)client receivedBaseFile:(NSData *)baseFile {
