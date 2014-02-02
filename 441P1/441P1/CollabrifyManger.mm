@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g000000";
+NSString *SESSION_NAME = @"g0000002";
 
 @interface CollabrifyManger ()
 
@@ -173,7 +173,7 @@ NSString *SESSION_NAME = @"g000000";
         return NO;
         
     }];
-    
+    if (index != NSNotFound)
     _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
     
     for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
