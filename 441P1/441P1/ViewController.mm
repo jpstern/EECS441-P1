@@ -191,6 +191,8 @@ using namespace std;
         _activeText = string;
         
     }
+    
+    _textBeforeEvent = _textView.text;
 }
 
 - (void)receivedEvent:(Event *)event {
@@ -250,6 +252,8 @@ using namespace std;
         _textView.text = currentText;
         _activeText = currentText;
     }
+    
+    _textBeforeEvent = _textView.text;
 }
 
 - (void)undoPressed:(id)sender {
@@ -283,6 +287,7 @@ using namespace std;
     [currentText insertString:text atIndex:range.location];
     _textView.text = currentText;
     
+    _textBeforeEvent = _textView.text;
 }
 
 - (void)redoPressed:(id)sender {
