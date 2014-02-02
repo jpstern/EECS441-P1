@@ -102,7 +102,7 @@ using namespace std;
 
 - (void)applyEvent:(Event *)event {
     
-    if (event.type == INSERT || (event.type == REDO && event.del)) {
+    if (event.type == INSERT || (event.type == REDO && !event.del)) {
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
         NSLog(@"applying text: %@", event.text);
@@ -126,7 +126,7 @@ using namespace std;
         [_textView setText:string];
         _activeText = string;
     }
-    else if (event.type == DELETE || (event.type == REDO && !event.del)) {
+    else if (event.type == DELETE || (event.type == REDO && event.del)) {
         
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
