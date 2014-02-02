@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g000000002";
+NSString *SESSION_NAME = @"g000000003";
 
 @interface CollabrifyManger ()
 
@@ -306,7 +306,7 @@ NSString *SESSION_NAME = @"g000000002";
         
         event.confirmed = YES;
         
-        [self fixEventOrderingForEvent:event];gi
+        [self fixEventOrderingForEvent:event];
         
         [_eventOrdering addObject:event];
         
