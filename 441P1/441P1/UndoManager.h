@@ -17,6 +17,7 @@
 @property (nonatomic, assign) BOOL canRedo;
 
 @property (nonatomic, assign) NSInteger pendingUndo;
+@property (nonatomic, assign) NSInteger pendingRedo;
 
 #pragma mark undo methods
 

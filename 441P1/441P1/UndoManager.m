@@ -25,12 +25,12 @@
 
 - (BOOL)canUndo {
     
-    return _undoStack.count > 0;
+    return _undoStack.count - _pendingUndo > 0;
 }
 
 - (BOOL)canRedo {
     
-    return _redoStack.count > 0;
+    return _redoStack.count - _pendingRedo > 0;
 }
 
 - (void)addEventToUndoStack:(id)event {
@@ -52,7 +52,11 @@
 
 - (id)getNextRedo {
     
-    return [_redoStack lastObject];
+    id event = _redoStack[_redoStack.count - 1 - _pendingRedo];
+    _pendingRedo ++;
+    
+    return event;
+//    return [_redoStack lastObject];
 }
 
 - (id)undoEvent {
@@ -67,6 +71,8 @@
 }
 
 - (id)redoEvent {
+    
+    _pendingRedo --;
     
     id event = [_redoStack lastObject];
     [_undoStack addObject:event];
