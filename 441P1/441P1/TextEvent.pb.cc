@@ -33,11 +33,12 @@ void protobuf_AssignDesc_TextEvent_2eproto() {
       "TextEvent.proto");
   GOOGLE_CHECK(file != NULL);
   TextEvent_descriptor_ = file->message_type(0);
-  static const int TextEvent_offsets_[4] = {
+  static const int TextEvent_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextEvent, text_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextEvent, location_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextEvent, user_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextEvent, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextEvent, delete__),
   };
   TextEvent_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -81,11 +82,11 @@ void protobuf_AddDesc_TextEvent_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017TextEvent.proto\"^\n\tTextEvent\022\014\n\004text\030\001"
+    "\n\017TextEvent.proto\"n\n\tTextEvent\022\014\n\004text\030\001"
     " \001(\t\022\020\n\010location\030\002 \001(\005\022\017\n\007user_id\030\003 \001(\003\022"
-    " \n\004type\030\004 \001(\0162\n.EventType:\006INSERT*7\n\tEve"
-    "ntType\022\n\n\006INSERT\020\000\022\n\n\006DELETE\020\001\022\010\n\004UNDO\020\002"
-    "\022\010\n\004REDO\020\003", 170);
+    " \n\004type\030\004 \001(\0162\n.EventType:\006INSERT\022\016\n\006del"
+    "ete\030\005 \001(\010*7\n\tEventType\022\n\n\006INSERT\020\000\022\n\n\006DE"
+    "LETE\020\001\022\010\n\004UNDO\020\002\022\010\n\004REDO\020\003", 186);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "TextEvent.proto", &protobuf_RegisterTypes);
   TextEvent::default_instance_ = new TextEvent();
@@ -123,6 +124,7 @@ const int TextEvent::kTextFieldNumber;
 const int TextEvent::kLocationFieldNumber;
 const int TextEvent::kUserIdFieldNumber;
 const int TextEvent::kTypeFieldNumber;
+const int TextEvent::kDeleteFieldNumber;
 #endif  // !_MSC_VER
 
 TextEvent::TextEvent()
@@ -145,6 +147,7 @@ void TextEvent::SharedCtor() {
   location_ = 0;
   user_id_ = GOOGLE_LONGLONG(0);
   type_ = 0;
+  delete__ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -191,6 +194,7 @@ void TextEvent::Clear() {
     location_ = 0;
     user_id_ = GOOGLE_LONGLONG(0);
     type_ = 0;
+    delete__ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -267,6 +271,22 @@ bool TextEvent::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(40)) goto parse_delete;
+        break;
+      }
+
+      // optional bool delete = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_delete:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &delete__)));
+          set_has_delete_();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -314,6 +334,11 @@ void TextEvent::SerializeWithCachedSizes(
       4, this->type(), output);
   }
 
+  // optional bool delete = 5;
+  if (has_delete_()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->delete_(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -346,6 +371,11 @@ void TextEvent::SerializeWithCachedSizes(
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       4, this->type(), target);
+  }
+
+  // optional bool delete = 5;
+  if (has_delete_()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->delete_(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -384,6 +414,11 @@ int TextEvent::ByteSize() const {
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional bool delete = 5;
+    if (has_delete_()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -425,6 +460,9 @@ void TextEvent::MergeFrom(const TextEvent& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_delete_()) {
+      set_delete_(from.delete_());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -452,6 +490,7 @@ void TextEvent::Swap(TextEvent* other) {
     std::swap(location_, other->location_);
     std::swap(user_id_, other->user_id_);
     std::swap(type_, other->type_);
+    std::swap(delete__, other->delete__);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

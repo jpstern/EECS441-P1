@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSNumber *submissionID;
 @property (nonatomic, strong) NSNumber *orderID;
 @property (nonatomic, assign) NSInteger type;
+@property (nonatomic, assign) BOOL del;
 
 - (id)initWithLocation:(NSInteger)loc andText:(NSString*)text;
 

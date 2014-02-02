@@ -11,6 +11,6 @@ message TextEvent {
 	optional int32 location = 2;
 	optional int64 user_id = 3;
 	optional EventType type = 4 [default = INSERT];
-
+    optional bool delete = 5;
 }
 

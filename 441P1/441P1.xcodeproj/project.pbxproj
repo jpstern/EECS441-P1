@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		80962521189EEAC4003F2749 /* TextEvent.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8096251F189EEAC4003F2749 /* TextEvent.pb.cc */; };
 		80DD39F31891D95000A1D22E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F21891D95000A1D22E /* Foundation.framework */; };
 		80DD39F51891D95000A1D22E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F41891D95000A1D22E /* CoreGraphics.framework */; };
 		80DD39F71891D95000A1D22E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F61891D95000A1D22E /* UIKit.framework */; };
@@ -30,7 +31,6 @@
 		80E4729218944CBD00363BFD /* CollabrifyManger.mm in Sources */ = {isa = PBXBuildFile; fileRef = 80E4729118944CBD00363BFD /* CollabrifyManger.mm */; };
 		80E472D418945F9200363BFD /* plugin.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472A718945F9200363BFD /* plugin.proto */; };
 		80E472D518945F9200363BFD /* descriptor.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472AC18945F9200363BFD /* descriptor.proto */; };
-		80E472DC189469DC00363BFD /* TextEvent.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 80E472D9189469DC00363BFD /* TextEvent.pb.cc */; };
 		80E472DD189469DC00363BFD /* TextEvent.proto in Resources */ = {isa = PBXBuildFile; fileRef = 80E472DB189469DC00363BFD /* TextEvent.proto */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8096251F189EEAC4003F2749 /* TextEvent.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEvent.pb.cc; sourceTree = "<group>"; };
+		80962520189EEAC4003F2749 /* TextEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEvent.pb.h; sourceTree = "<group>"; };
 		80DD39EF1891D95000A1D22E /* 441P1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 441P1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80DD39F21891D95000A1D22E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		80DD39F41891D95000A1D22E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -125,8 +127,6 @@
 		80E472D118945F9200363BFD /* wire_format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format.h; sourceTree = "<group>"; };
 		80E472D218945F9200363BFD /* wire_format_lite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format_lite.h; sourceTree = "<group>"; };
 		80E472D318945F9200363BFD /* wire_format_lite_inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wire_format_lite_inl.h; sourceTree = "<group>"; };
-		80E472D9189469DC00363BFD /* TextEvent.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEvent.pb.cc; sourceTree = "<group>"; };
-		80E472DA189469DC00363BFD /* TextEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEvent.pb.h; sourceTree = "<group>"; };
 		80E472DB189469DC00363BFD /* TextEvent.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TextEvent.proto; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -247,9 +247,9 @@
 		80E4729818945BF800363BFD /* proto */ = {
 			isa = PBXGroup;
 			children = (
-				80E472D9189469DC00363BFD /* TextEvent.pb.cc */,
-				80E472DA189469DC00363BFD /* TextEvent.pb.h */,
 				80E472DB189469DC00363BFD /* TextEvent.proto */,
+				8096251F189EEAC4003F2749 /* TextEvent.pb.cc */,
+				80962520189EEAC4003F2749 /* TextEvent.pb.h */,
 			);
 			name = proto;
 			sourceTree = "<group>";
@@ -480,7 +480,7 @@
 				80E4729218944CBD00363BFD /* CollabrifyManger.mm in Sources */,
 				80DD3A2C1891DF8A00A1D22E /* UndoManager.m in Sources */,
 				80DD3A031891D95000A1D22E /* AppDelegate.m in Sources */,
-				80E472DC189469DC00363BFD /* TextEvent.pb.cc in Sources */,
+				80962521189EEAC4003F2749 /* TextEvent.pb.cc in Sources */,
 				80DD39FF1891D95000A1D22E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

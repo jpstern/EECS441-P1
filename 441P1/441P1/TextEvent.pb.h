@@ -144,6 +144,13 @@ class TextEvent : public ::google::protobuf::Message {
   inline ::EventType type() const;
   inline void set_type(::EventType value);
 
+  // optional bool delete = 5;
+  inline bool has_delete_() const;
+  inline void clear_delete_();
+  static const int kDeleteFieldNumber = 5;
+  inline bool delete_() const;
+  inline void set_delete_(bool value);
+
   // @@protoc_insertion_point(class_scope:TextEvent)
  private:
   inline void set_has_text();
@@ -154,6 +161,8 @@ class TextEvent : public ::google::protobuf::Message {
   inline void clear_has_user_id();
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_delete_();
+  inline void clear_has_delete_();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -161,9 +170,10 @@ class TextEvent : public ::google::protobuf::Message {
   ::google::protobuf::int64 user_id_;
   ::google::protobuf::int32 location_;
   int type_;
+  bool delete__;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_TextEvent_2eproto();
   friend void protobuf_AssignDesc_TextEvent_2eproto();
@@ -314,6 +324,28 @@ inline void TextEvent::set_type(::EventType value) {
   assert(::EventType_IsValid(value));
   set_has_type();
   type_ = value;
+}
+
+// optional bool delete = 5;
+inline bool TextEvent::has_delete_() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void TextEvent::set_has_delete_() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void TextEvent::clear_has_delete_() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void TextEvent::clear_delete_() {
+  delete__ = false;
+  clear_has_delete_();
+}
+inline bool TextEvent::delete_() const {
+  return delete__;
+}
+inline void TextEvent::set_delete_(bool value) {
+  set_has_delete_();
+  delete__ = value;
 }
 
 

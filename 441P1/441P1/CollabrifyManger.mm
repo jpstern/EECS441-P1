@@ -261,6 +261,7 @@ NSString *SESSION_NAME = @"g00000001";
     event.orderID = @(orderID);
     event.submissionID = @(submissionRegistrationID);
     event.type = textEvent->type();
+    event.del = textEvent->delete_();
     
     cout << orderID << " receiving : " << textEvent->text().c_str() << endl;
     
