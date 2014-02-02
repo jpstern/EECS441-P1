@@ -23,6 +23,8 @@ using namespace std;
 - (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag;
 - (BOOL)isTimerValid;
 
+- (void)clearText;
+
 @end
 
 @interface CollabrifyManger : NSObject <CollabrifyClientDelegate>

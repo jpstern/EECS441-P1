@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g00003";
+NSString *SESSION_NAME = @"g00005";
 
 @interface CollabrifyManger ()
 
@@ -155,12 +155,14 @@ NSString *SESSION_NAME = @"g00003";
 
 - (void)unwindEvents {
     
-    for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
+    [_delegate clearText];
     
-        if (event.type == INSERT)
-            [_delegate undoEvent:event andRemoveFromStack:NO];
-        
-    }
+//    for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
+//    
+//        if (event.type == INSERT)
+//            [_delegate undoEvent:event andRemoveFromStack:NO];
+//        
+//    }
     
     [self reapplyEvents];
 }

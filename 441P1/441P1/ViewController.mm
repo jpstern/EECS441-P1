@@ -54,6 +54,11 @@ using namespace std;
     
 }
 
+- (void)clearText {
+    
+    _textView.text = @"";
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
