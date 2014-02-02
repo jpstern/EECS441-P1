@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g00000001";
+NSString *SESSION_NAME = @"g00000006";
 
 @interface CollabrifyManger ()
 

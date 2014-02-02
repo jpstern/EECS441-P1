@@ -196,13 +196,13 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    if (event.type == INSERT || (event.type == UNDO && event.del)) {
+    if (event.type == INSERT || (event.type == UNDO && !event.del)) {
         NSMutableString *currentText = [_textView.text mutableCopy];
         [currentText deleteCharactersInRange:range];
         _textView.text = currentText;
         _activeText=currentText;
     }
-    else if (event.type == DELETE || (event.type == UNDO && !event.del)) {
+    else if (event.type == DELETE || (event.type == UNDO && event.del)) {
         
         NSMutableString *currentText = [_textView.text mutableCopy];
         [currentText insertString:event.text atIndex:event.range.location];
@@ -280,6 +280,7 @@ using namespace std;
                 //this location will be the start of the delete
                 _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
                 _currentEvent.type = DELETE;
+                _currentEvent.del = YES;
             }
             else {
                 

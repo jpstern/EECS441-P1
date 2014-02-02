@@ -34,6 +34,7 @@
         [copy setRange:self.range];
         [copy setType:self.type];
         [copy setConfirmed:self.confirmed];
+        [copy setDel:self.del];
     }
     
     return copy;
