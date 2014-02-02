@@ -278,12 +278,13 @@ using namespace std;
             if (!_currentEvent) {
                 
                 //this location will be the start of the delete
-                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[NSString stringWithFormat:@"%@%@",_currentEvent.text, [_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]]];
+                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:@" "];
                 _currentEvent.type = DELETE;
             }
             else {
                 
-                _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.range.length + 1);
+                _currentEvent.text = [NSString stringWithFormat:@"%@%@",[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)], _currentEvent.text];
+                _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.text.length);
             }
             
             //        if (!_currentEvent) {
