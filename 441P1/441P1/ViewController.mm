@@ -102,33 +102,62 @@ using namespace std;
 
 - (void)applyEvent:(Event *)event {
     
-    NSLog(@"active text is: %@", _textView.text);
-    NSLog(@"current text is: %@", _textView.text);
-    NSLog(@"applying text: %@", event.text);
-    //add event to global ordering array
-    
-    NSMutableString *string = [_activeText mutableCopy];
-    if (event.range.location >= string.length) {
+    if (event.type == INSERT) {
+        NSLog(@"active text is: %@", _textView.text);
+        NSLog(@"current text is: %@", _textView.text);
+        NSLog(@"applying text: %@", event.text);
+        //add event to global ordering array
         
-        NSLog(@"appending:%@", event.text);
-        event.range = NSMakeRange(string.length, event.range.length);
-        [string appendString:event.text];
+        NSMutableString *string = [_activeText mutableCopy];
+        if (event.range.location >= string.length) {
+            
+            NSLog(@"appending:%@", event.text);
+            event.range = NSMakeRange(string.length, event.range.length);
+            [string appendString:event.text];
+        }
+        else {
+            
+            NSLog(@"inserting:%@", event.text);
+            [string insertString:event.text atIndex:event.range.location];
+            
+        }
+        [_textView setText:string];
+        _activeText = string;
     }
-    else {
+    else if (event.type == DELETE) {
         
-        NSLog(@"inserting:%@", event.text);
-        [string insertString:event.text atIndex:event.range.location];
+        NSLog(@"active text is: %@", _textView.text);
+        NSLog(@"current text is: %@", _textView.text);
+        NSLog(@"applying text: %@", event.text);
+        //add event to global ordering array
+        
+        NSMutableString *string = [_activeText mutableCopy];
+        
+        [string deleteCharactersInRange:event.range];
+        
+//        if (event.range.location >= string.length) {
+//            
+//            NSLog(@"appending:%@", event.text);
+//            event.range = NSMakeRange(string.length, event.range.length);
+//            [string appendString:event.text];
+//        }
+//        else {
+//            
+//            NSLog(@"inserting:%@", event.text);
+//            [string insertString:event.text atIndex:event.range.location];
+//            
+//        }
+        [_textView setText:string];
+        _activeText = string;
         
     }
-    [_textView setText:string];
-    _activeText = string;
 }
 
 - (void)receivedEvent:(Event *)event {
     
 //    [_events addObject:event];
     
-    if (event.type == INSERT || event.type == REDO) {
+    if (event.type == INSERT || event.type == REDO || event.type == DELETE) {
         
 //        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
@@ -233,6 +262,17 @@ using namespace std;
             
             NSLog(@"delete occured");
             
+            if (!_currentEvent) {
+                
+                //this location will be the start of the delete
+                _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location + 1 andText:@" "];
+                _currentEvent.type = DELETE;
+            }
+            else {
+                
+                _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.range.length + 1);
+            }
+            
             //        if (!_currentEvent) {
             //
             //            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
@@ -240,8 +280,16 @@ using namespace std;
             //        else {
             //            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
             //        }
+            
+            
         }
         else {
+            
+            
+            if (_currentEvent && _currentEvent.type == DELETE) {
+                
+                [self prepareEvent];
+            }
             
             if (!_currentEvent) {
                 
@@ -253,7 +301,6 @@ using namespace std;
                 
                 NSLog(@"setting text to: %@", _currentEvent.text);
             }
-             
         }
         
         _activeText = textView.text;
