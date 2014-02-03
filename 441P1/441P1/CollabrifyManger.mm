@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g000000000006";
+NSString *SESSION_NAME = @"g0000000000002";
 
 @interface CollabrifyManger ()
 
@@ -143,20 +143,16 @@ NSString *SESSION_NAME = @"g000000000006";
             
             [_delegate applyEvent:event];
         }
-        else if (event.type == REDO) {
+        else if (event.type == REDO && event.orderID) {
             
-//            [_delegate applyEvent:event];
             [_delegate redoEvent:event];
         }
         else if (event.type == UNDO && event.orderID) {
             
             [_delegate undoEvent:event andRemoveFromStack:[event.submissionID intValue] != -1];
         }
-        
-        if (event.orderID)
-            event.confirmed = YES;
+
     }
-    
     
     NSInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         
@@ -343,19 +339,33 @@ NSString *SESSION_NAME = @"g000000000006";
 
 }
 
-- (void)fixEventOrderingForEvent:(Event*)newEvent {
+- (void)fixEventOrderingForEvent:(Event*)e {
+    
+    Event *changedEvent = [e copy];
     
     for (Event *event in _eventOrdering) {
         
-        if (event.confirmed == NO) {
+        if (!e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
             
-            if (NSLocationInRange(newEvent.range.location, event.range)) {
-                
-                newEvent.range = NSMakeRange(event.range.location + event.range.length, newEvent.range.length);
-                
-                break;
-            }
+            event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
+            changedEvent = event;
         }
+        else if (e.del) {
+            
+            event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
+            changedEvent = event;
+        }
+
+        
+//        if (event.confirmed == NO) {
+//            
+//            if (NSLocationInRange(newEvent.range.location, event.range)) {
+//                
+//                newEvent.range = NSMakeRange(event.range.location + event.range.length, newEvent.range.length);
+//                
+//                break;
+//            }
+//        }
     }
 }
 

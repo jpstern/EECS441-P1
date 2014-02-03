@@ -347,6 +347,7 @@ using namespace std;
 //        Event *event = [_manager redoEvent];
         Event *event = [_manager getNextRedo];
         event.type = REDO;
+        event.orderID = nil;
         
         [_collabrifyManager sendEvent:event];
         
