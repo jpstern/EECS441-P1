@@ -262,10 +262,20 @@ using namespace std;
         
         Event *event = [[_manager getNextUndo] copy];
         event.type = UNDO;
+        event.orderID = nil;
+        
+        NSLog(@"undo pressed");
+        
+        NSLog(@"UNDOING : %@ %@", event.text, event.orderID);
+        
+        
+        NSLog(@"%@", _collabrifyManager.eventOrdering);
                 
         [_collabrifyManager sendEvent:event];
 //        Event *event = [_manager undoEvent];
 //        [self undoEvent:event];
+        
+        NSLog(@"%@", _collabrifyManager.eventOrdering);
         
     }
 

@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g0000000001gi";
+NSString *SESSION_NAME = @"g000000000001";
 
 @interface CollabrifyManger ()
 
@@ -148,13 +148,35 @@ NSString *SESSION_NAME = @"g0000000001gi";
 //            [_delegate applyEvent:event];
             [_delegate redoEvent:event];
         }
-        else if (event.type == UNDO) {
+        else if (event.type == UNDO && event.orderID) {
             
             [_delegate undoEvent:event andRemoveFromStack:[event.submissionID intValue] != -1];
         }
         
-        event.confirmed = YES;
+        if (event.orderID)
+            event.confirmed = YES;
     }
+    
+    
+    NSInteger index = [_eventOrdering indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        
+        if (![obj confirmed]) {
+            
+            return YES;
+        }
+        
+        return NO;
+        
+    }];
+    
+    if (index != NSNotFound) {
+        _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
+    }
+    else {
+        
+        [_eventOrdering removeAllObjects];
+    }
+    
     
     
 }
@@ -174,15 +196,21 @@ NSString *SESSION_NAME = @"g0000000001gi";
         
     }];
    
-    if (index != NSNotFound)
+    if (index != NSNotFound) {
         _eventOrdering = [[_eventOrdering subarrayWithRange:NSMakeRange(index, _eventOrdering.count - index)] mutableCopy];
-    
+    }
+    else {
+        
+        [_eventOrdering removeAllObjects];
+    }
+
     for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
         
         if (event.type == INSERT || event.type == DELETE)
             [_delegate undoEvent:event andRemoveFromStack:NO];
     
-        event.confirmed = YES;
+        if (event.orderID)
+            event.confirmed = YES;
     }
 
     [self reapplyEvents];
