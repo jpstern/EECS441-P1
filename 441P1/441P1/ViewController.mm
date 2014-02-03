@@ -199,11 +199,15 @@ using namespace std;
     
 //    [_events addObject:event];
     
-    if (event.type == INSERT || event.type == REDO || event.type == DELETE) {
+    if (event.type == INSERT || event.type == DELETE) {
         
 //        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
         [self applyEvent:event];
+    }
+    else if (event.type == REDO) {
+        
+        [self redoEvent:event];
     }
     else if (event.type == UNDO) {
         
