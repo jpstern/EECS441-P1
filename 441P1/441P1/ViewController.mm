@@ -122,15 +122,50 @@ using namespace std;
     }
 }
 
-- (void)fixUndoStackForEvent:(Event*)undoneEvent {
+- (void)fixUndoStackForEvent:(Event*)e {
+    
+    Event *changedEvent = [e copy];
     
     for (Event *event in _manager.undoStack) {
         
-        if (undoneEvent.range.location < event.range.location) {
-            
-            event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
-        }
+//        if (e.type == REDO) {
+        
+            if (!e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
+                
+                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
+                changedEvent = event;
+            }
+            else if (e.del) {
+                
+                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
+                changedEvent = event;
+            }
+//        }
+//        else if (e.type == UNDO) {
+//            
+//            if (!e.del)
+//            
+//        }
+
     }
+    
+//    for (Event *event in _manager.undoStack) {
+//        
+//        if (changedEvent.type == UNDO) {
+//            if (changedEvent.range.location < event.range.location) {
+//                
+//                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
+//            }
+//        }
+//        else if (changedEvent.type == REDO) {
+//            
+//            if (NSLocationInRange(event.range.location, changedEvent.range)) {
+//            
+//                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
+//                changedEvent = event;
+//            }
+//        }
+//    }
     
 }
 
@@ -187,6 +222,7 @@ using namespace std;
 //            [string insertString:event.text atIndex:event.range.location];
 //            
 //        }
+        
         [_textView setText:string];
         _activeText = string;
         
@@ -208,6 +244,7 @@ using namespace std;
     else if (event.type == REDO) {
         
         [self redoEvent:event];
+        [self fixUndoStackForEvent:event];
     }
     else if (event.type == UNDO) {
         
