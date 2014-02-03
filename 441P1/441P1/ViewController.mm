@@ -128,24 +128,34 @@ using namespace std;
     
     for (Event *event in _manager.undoStack) {
         
-//        if (e.type == REDO) {
+        if (e.type == REDO) {
         
             if (!e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
                 
                 event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
                 changedEvent = event;
             }
-            else if (e.del) {
+            else if (e.del && event.range.location >= changedEvent.range.location) {
                 
                 event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
                 changedEvent = event;
             }
-//        }
-//        else if (e.type == UNDO) {
-//            
-//            if (!e.del)
-//            
-//        }
+        }
+        else if (e.type == UNDO) {
+            
+            if (e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
+                
+                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
+                changedEvent = event;
+            }
+            else if (!e.del && event.range.location >= changedEvent.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
+                changedEvent = event;
+            }
+
+            
+        }
 
     }
     
@@ -244,12 +254,12 @@ using namespace std;
     else if (event.type == REDO) {
         
         [self redoEvent:event];
-        [self fixUndoStackForEvent:event];
+//        [self fixUndoStackForEvent:event];
     }
     else if (event.type == UNDO) {
         
         [self undoEvent:event andRemoveFromStack:NO];
-        [self fixUndoStackForEvent:event];
+//        [self fixUndoStackForEvent:event];
     }
     
 }
