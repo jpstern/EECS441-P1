@@ -26,6 +26,8 @@ using namespace std;
 
 - (void)clearText;
 
+- (void)setCursorLocation:(NSInteger)pos;
+
 @end
 
 @interface CollabrifyManger : NSObject <CollabrifyClientDelegate>
@@ -36,6 +38,8 @@ using namespace std;
 @property (nonatomic, strong) CollabrifyClient *client;
 
 @property (nonatomic, strong) NSMutableArray *eventOrdering;
+
+@property (nonatomic, assign) NSInteger cursorPosition;
 
 - (void)leaveSession;
 

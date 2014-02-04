@@ -9,7 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g00000000000005";
+NSString *SESSION_NAME = @"g00000000000008";
 
 @interface CollabrifyManger ()
 
@@ -156,7 +156,7 @@ NSString *SESSION_NAME = @"g00000000000005";
         event.confirmed = YES;
     }
     
-    
+    [_delegate setCursorLocation:_cursorPosition];
 }
 
 - (void)unwindEvents {

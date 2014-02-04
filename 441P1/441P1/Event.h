@@ -22,6 +22,9 @@
 
 
 @property (nonatomic) BOOL confirmed;
+
+@property (nonatomic, assign) NSInteger startCursor;
+@property (nonatomic, assign) NSInteger endCursor;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) NSRange range;
 @property (nonatomic, strong) NSNumber *participantID;
