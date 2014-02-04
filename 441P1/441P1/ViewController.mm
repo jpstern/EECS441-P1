@@ -257,7 +257,7 @@ using namespace std;
         [self fixStacksForUndo:event];
     }
     
-    [self setCursorLocation:cursorPos];
+//    [self setCursorLocation:cursorPos];
     
 }
 
