@@ -136,31 +136,31 @@ using namespace std;
 
 - (void)applyEvent:(Event *)event {
     
-    if (event.type == INSERT || (event.type == REDO && !event.del)) {
+    if (event.type == INSERT) {// || (event.type == REDO && !event.del)) {
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
         NSLog(@"applying text: %@", event.text);
         //add event to global ordering array
         
         NSMutableString *string = [_activeText mutableCopy];
-        if (event.range.location >= string.length) {
+//        if (event.range.location >= string.length) {
         
             NSLog(@"appending:%@", event.text);
             event.range = NSMakeRange(string.length, event.range.length);
             [string appendString:event.text];
-        }
-        else {
-            
-            NSLog(@"inserting:%@", event.text);
-            [string insertString:event.text atIndex:event.range.location];
-            
+//        }
+//        else {
+//            
+//            NSLog(@"inserting:%@", event.text);
+//            [string insertString:event.text atIndex:event.range.location];
+//            
 //            [self fixUndoStackForEvent:event];
-            
-        }
+//            
+//        }
         [_textView setText:string];
         _activeText = string;
     }
-    else if (event.type == DELETE || (event.type == REDO && event.del)) {
+    else if (event.type == DELETE) {// || (event.type == REDO && event.del)) {
         
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
@@ -199,11 +199,15 @@ using namespace std;
     
 //    [_events addObject:event];
     
-    if (event.type == INSERT || event.type == REDO || event.type == DELETE) {
+    if (event.type == INSERT || event.type == DELETE) {
         
 //        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
         [self applyEvent:event];
+    }
+    else if (event.type == REDO) {
+        
+        [self redoEvent:event andRemove:NO];
     }
     else if (event.type == UNDO) {
         
@@ -271,9 +275,10 @@ using namespace std;
 
 }
 
-- (void)redoEvent:(Event*)event {
+- (void)redoEvent:(Event*)event andRemove:(BOOL)flag {
     
-    [_manager redoEvent];
+    if (flag)
+        [_manager redoEvent];
     
     NSRange range = event.range;
     NSString *text = event.text;
@@ -283,9 +288,19 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    NSMutableString *currentText = [_textView.text mutableCopy];
-    [currentText insertString:text atIndex:range.location];
-    _textView.text = currentText;
+    if (event.del) {
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText deleteCharactersInRange:range];
+        _textView.text = currentText;
+
+    }
+    else {
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText insertString:text atIndex:range.location];
+        _textView.text = currentText;
+    }
     
     _textBeforeEvent = _textView.text;
 }

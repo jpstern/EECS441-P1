@@ -20,7 +20,7 @@ using namespace std;
 
 - (void)receivedEvent:(Event*)event;
 - (void)applyEvent:(Event *)event;
-- (void)redoEvent:(Event *)event;
+- (void)redoEvent:(Event*)event andRemove:(BOOL)flag;
 - (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag;
 - (BOOL)isTimerValid;
 
