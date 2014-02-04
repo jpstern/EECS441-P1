@@ -122,14 +122,48 @@ using namespace std;
     }
 }
 
-- (void)fixUndoStackForEvent:(Event*)undoneEvent {
+- (void)fixStacksForRedo:(Event*)redoneEvent {
     
-    for (Event *event in _manager.undoStack) {
+    if (!redoneEvent.del) {
         
-        if (undoneEvent.range.location < event.range.location) {
+        for (Event *event in _manager.undoStack) {
             
-            event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+            if (redoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
+            }
         }
+        
+        for (Event *event in _manager.redoStack) {
+            
+            if (redoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
+            }
+        }
+    }
+}
+
+- (void)fixStacksForUndo:(Event*)undoneEvent {
+    
+    if (!undoneEvent.del) {
+        
+        for (Event *event in _manager.undoStack) {
+            
+            if (undoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+            }
+        }
+        
+        for (Event *event in _manager.redoStack) {
+            
+            if (undoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+            }
+        }
+        
     }
     
 }
@@ -208,11 +242,12 @@ using namespace std;
     else if (event.type == REDO) {
         
         [self redoEvent:event andRemove:NO];
+        [self fixStacksForRedo:event];
     }
     else if (event.type == UNDO) {
         
         [self undoEvent:event andRemoveFromStack:NO];
-        [self fixUndoStackForEvent:event];
+        [self fixStacksForUndo:event];
     }
     
 }
