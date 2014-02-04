@@ -10,7 +10,7 @@
 
 
 
-NSString *SESSION_NAME = @"g000000000000000003";
+NSString *SESSION_NAME = @"g000000000000000004";
 
 @interface CollabrifyManger ()
 
@@ -176,7 +176,7 @@ NSString *SESSION_NAME = @"g000000000000000003";
     }
     
 
-    [_delegate setCursorLocation:_cursorPosition];
+//    [_delegate setCursorLocation:_cursorPosition];
 }
 
 - (void)unwindEvents {
