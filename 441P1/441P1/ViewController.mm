@@ -163,7 +163,7 @@ using namespace std;
         
         for (Event *event in _manager.undoStack) {
             
-            if (redoneEvent.range.location <= event.range.location) {
+            if (redoneEvent.range.location <= event.range.location && event.startCursor != redoneEvent.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
             }
@@ -171,7 +171,7 @@ using namespace std;
         
         for (Event *event in _manager.redoStack) {
             
-            if (redoneEvent.range.location <= event.range.location) {
+            if (redoneEvent.range.location <= event.range.location && event.startCursor != redoneEvent.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
             }
@@ -185,7 +185,7 @@ using namespace std;
         
         for (Event *event in _manager.undoStack) {
             
-            if (undoneEvent.range.location < event.range.location) {
+            if (undoneEvent.range.location < event.range.location  && event.startCursor != undoneEvent.range.location) {
                 
                 event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
             }
@@ -193,7 +193,7 @@ using namespace std;
         
         for (Event *event in _manager.redoStack) {
             
-            if (undoneEvent.range.location < event.range.location) {
+            if (undoneEvent.range.location < event.range.location && event.startCursor != undoneEvent.range.location) {
                 
                 event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
             }
