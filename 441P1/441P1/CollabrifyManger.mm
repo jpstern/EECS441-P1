@@ -9,7 +9,8 @@
 #import "CollabrifyManger.h"
 
 
-NSString *SESSION_NAME = @"g0000000000007";
+
+NSString *SESSION_NAME = @"g000000000000002";
 
 @interface CollabrifyManger ()
 
@@ -145,7 +146,8 @@ NSString *SESSION_NAME = @"g0000000000007";
         }
         else if (event.type == REDO && event.orderID) {
             
-            [_delegate redoEvent:event];
+
+            [_delegate redoEvent:event andRemove:[event.submissionID intValue] != -1];
         }
         else if (event.type == UNDO && event.orderID) {
             
@@ -173,8 +175,8 @@ NSString *SESSION_NAME = @"g0000000000007";
         [_eventOrdering removeAllObjects];
     }
     
-    
-    
+
+    [_delegate setCursorLocation:_cursorPosition];
 }
 
 - (void)unwindEvents {
@@ -355,17 +357,6 @@ NSString *SESSION_NAME = @"g0000000000007";
             event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
             changedEvent = event;
         }
-
-        
-//        if (event.confirmed == NO) {
-//            
-//            if (NSLocationInRange(newEvent.range.location, event.range)) {
-//                
-//                newEvent.range = NSMakeRange(event.range.location + event.range.length, newEvent.range.length);
-//                
-//                break;
-//            }
-//        }
     }
 }
 

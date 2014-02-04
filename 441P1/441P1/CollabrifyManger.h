@@ -20,11 +20,13 @@ using namespace std;
 
 - (void)receivedEvent:(Event*)event;
 - (void)applyEvent:(Event *)event;
-- (void)redoEvent:(Event *)event;
+- (void)redoEvent:(Event*)event andRemove:(BOOL)flag;
 - (void)undoEvent:(Event*)event andRemoveFromStack:(BOOL)flag;
 - (BOOL)isTimerValid;
 
 - (void)clearText;
+
+- (void)setCursorLocation:(NSInteger)pos;
 
 @end
 
@@ -36,6 +38,8 @@ using namespace std;
 @property (nonatomic, strong) CollabrifyClient *client;
 
 @property (nonatomic, strong) NSMutableArray *eventOrdering;
+
+@property (nonatomic, assign) NSInteger cursorPosition;
 
 - (void)leaveSession;
 

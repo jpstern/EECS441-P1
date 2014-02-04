@@ -67,21 +67,33 @@ using namespace std;
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setCursorLocation:(NSInteger)pos {
+    
+    _textView.selectedRange = NSMakeRange(pos, 0);
+}
+
 - (void)prepareEvent {
     
-    _currentEvent = [[Event alloc] init];
+    NSRange cursorPosition = [_textView selectedRange];
+    
+    _collabrifyManager.cursorPosition = cursorPosition.location;
+    
+    _currentEvent.endCursor = cursorPosition.location;
     
     if (_textBeforeEvent.length != _activeText.length) {
+        
         if (_textBeforeEvent.length < _activeText.length) {
             
             _currentEvent.type = INSERT;
-            _currentEvent.range = NSMakeRange(_textBeforeEvent.length, _activeText.length - _textBeforeEvent.length);
+            _currentEvent.range = NSMakeRange(_currentEvent.startCursor, _currentEvent.endCursor - _currentEvent.startCursor);
+            //NSMakeRange(_textBeforeEvent.length, _activeText.length - _textBeforeEvent.length);
             _currentEvent.text = [_activeText substringWithRange:_currentEvent.range];
         }
         else if (_textBeforeEvent.length > _activeText.length) {
             
             _currentEvent.type = DELETE;
-            _currentEvent.range = NSMakeRange(_activeText.length, _textBeforeEvent.length - _activeText.length);
+            _currentEvent.range = NSMakeRange(_currentEvent.endCursor, _currentEvent.startCursor - _currentEvent.endCursor);
+            //NSMakeRange(_activeText.length, _textBeforeEvent.length - _activeText.length);
             _currentEvent.text = [_textBeforeEvent substringWithRange:_currentEvent.range];
         }
         
@@ -98,114 +110,107 @@ using namespace std;
         
         _textBeforeEvent = _textView.text;
 
-        
-//        if (_currentEvent.text.length > 0) {
-//            
-//            //send current event
-//            //add to undo stack
-//            
-//            [_manager addEventToUndoStack:_currentEvent];
-//            
-//            NSLog(@"sending text %@", _currentEvent.text);
-//            
-//            //add event to global ordering array
-//            
-//            [_collabrifyManager sendEvent:_currentEvent];
-//            
-//            _currentEvent = nil;
-//            
-//            _textBeforeEvent = _textView.text;
-//            
-//        }
-        
         [_collabrifyManager timerBecameInvalid];
     }
 }
 
-- (void)fixUndoStackForEvent:(Event*)e {
+- (void)fixStacksForEvent:(Event*)insertedEvent isDelete:(BOOL)flag {
     
-    Event *changedEvent = [e copy];
-    
-    for (Event *event in _manager.undoStack) {
+    if (!flag) {
         
-        if (e.type == REDO) {
-        
-            if (!e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
+        for (Event *event in _manager.undoStack) {
+            
+            if (insertedEvent.range.location < event.range.location) {
                 
-                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
-                changedEvent = event;
-            }
-            else if (e.del && event.range.location >= changedEvent.range.location) {
-                
-                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
-                changedEvent = event;
+                event.range = NSMakeRange(event.range.location + insertedEvent.range.length, event.range.length);
             }
         }
-        else if (e.type == UNDO) {
+        
+        for (Event *event in _manager.redoStack) {
             
-            if (e.del && NSLocationInRange(changedEvent.range.location, event.range)) {
+            if (insertedEvent.range.location < event.range.location) {
                 
-                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
-                changedEvent = event;
+                event.range = NSMakeRange(event.range.location + insertedEvent.range.length, event.range.length);
             }
-            else if (!e.del && event.range.location >= changedEvent.range.location) {
-                
-                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
-                changedEvent = event;
-            }
-
-            
         }
 
     }
+}
+
+- (void)fixStacksForRedo:(Event*)redoneEvent {
     
-//    for (Event *event in _manager.undoStack) {
-//        
-//        if (changedEvent.type == UNDO) {
-//            if (changedEvent.range.location < event.range.location) {
-//                
-//                event.range = NSMakeRange(event.range.location - changedEvent.range.length, event.range.length);
-//            }
-//        }
-//        else if (changedEvent.type == REDO) {
-//            
-//            if (NSLocationInRange(event.range.location, changedEvent.range)) {
-//            
-//                event.range = NSMakeRange(event.range.location + changedEvent.range.length, event.range.length);
-//                changedEvent = event;
-//            }
-//        }
-//    }
+    if (!redoneEvent.del) {
+        
+        for (Event *event in _manager.undoStack) {
+            
+            if (redoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
+            }
+        }
+        
+        for (Event *event in _manager.redoStack) {
+            
+            if (redoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
+            }
+        }
+    }
+}
+
+- (void)fixStacksForUndo:(Event*)undoneEvent {
+    
+    if (!undoneEvent.del) {
+        
+        for (Event *event in _manager.undoStack) {
+            
+            if (undoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+            }
+        }
+        
+        for (Event *event in _manager.redoStack) {
+            
+            if (undoneEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - undoneEvent.range.length, event.range.length);
+            }
+        }
+        
+    }
     
 }
 
 - (void)applyEvent:(Event *)event {
     
-    if (event.type == INSERT || (event.type == REDO && !event.del)) {
+    if (event.type == INSERT) {// || (event.type == REDO && !event.del)) {
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
         NSLog(@"applying text: %@", event.text);
         //add event to global ordering array
         
         NSMutableString *string = [_activeText mutableCopy];
-//        if (event.range.location >= string.length) {
+        if (event.range.location >= string.length) {
         
             NSLog(@"appending:%@", event.text);
             event.range = NSMakeRange(string.length, event.range.length);
             [string appendString:event.text];
-//        }
-//        else {
-//            
-//            NSLog(@"inserting:%@", event.text);
-//            [string insertString:event.text atIndex:event.range.location];
-//            
-//            [self fixUndoStackForEvent:event];
-//            
-//        }
+        }
+        else {
+            
+            NSLog(@"inserting:%@", event.text);
+            [string insertString:event.text atIndex:event.range.location];
+            
+            [self fixStacksForEvent:event isDelete:NO];
+            
+        }
+        
         [_textView setText:string];
         _activeText = string;
     }
-    else if (event.type == DELETE || (event.type == REDO && event.del)) {
+    else if (event.type == DELETE) {// || (event.type == REDO && event.del)) {
         
         NSLog(@"active text is: %@", _textView.text);
         NSLog(@"current text is: %@", _textView.text);
@@ -220,19 +225,6 @@ using namespace std;
         
         [string deleteCharactersInRange:event.range];
         
-//        if (event.range.location >= string.length) {
-//            
-//            NSLog(@"appending:%@", event.text);
-//            event.range = NSMakeRange(string.length, event.range.length);
-//            [string appendString:event.text];
-//        }
-//        else {
-//            
-//            NSLog(@"inserting:%@", event.text);
-//            [string insertString:event.text atIndex:event.range.location];
-//            
-//        }
-        
         [_textView setText:string];
         _activeText = string;
         
@@ -243,24 +235,29 @@ using namespace std;
 
 - (void)receivedEvent:(Event *)event {
     
-//    [_events addObject:event];
+
+    NSUInteger cursorPos = _textView.selectedRange.location;
+    
+    if (event.range.location < cursorPos)
+        cursorPos += event.range.length;
     
     if (event.type == INSERT || event.type == DELETE) {
-        
-//        if ([event.submissionID intValue] != -1) [_manager addEventToUndoStack:event];
         
         [self applyEvent:event];
     }
     else if (event.type == REDO) {
-        
-        [self redoEvent:event];
-//        [self fixUndoStackForEvent:event];
+
+        [self redoEvent:event andRemove:NO];
+        [self fixStacksForRedo:event];
     }
     else if (event.type == UNDO) {
         
         [self undoEvent:event andRemoveFromStack:NO];
-//        [self fixUndoStackForEvent:event];
+
+        [self fixStacksForUndo:event];
     }
+    
+    [self setCursorLocation:cursorPos];
     
 }
 
@@ -332,9 +329,10 @@ using namespace std;
 
 }
 
-- (void)redoEvent:(Event*)event {
+- (void)redoEvent:(Event*)event andRemove:(BOOL)flag {
     
-    [_manager redoEvent];
+    if (flag)
+        [_manager redoEvent];
     
     NSRange range = event.range;
     NSString *text = event.text;
@@ -344,9 +342,19 @@ using namespace std;
           range.location, (unsigned long)range.length);
     NSLog(@"%@", event.text);
     
-    NSMutableString *currentText = [_textView.text mutableCopy];
-    [currentText insertString:text atIndex:range.location];
-    _textView.text = currentText;
+    if (event.del) {
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText deleteCharactersInRange:range];
+        _textView.text = currentText;
+
+    }
+    else {
+        
+        NSMutableString *currentText = [_textView.text mutableCopy];
+        [currentText insertString:text atIndex:range.location];
+        _textView.text = currentText;
+    }
     
     _textBeforeEvent = _textView.text;
 }
@@ -354,7 +362,7 @@ using namespace std;
 - (void)redoPressed:(id)sender {
     
     if (_manager.canRedo) {
-//        Event *event = [_manager redoEvent];
+        
         Event *event = [_manager getNextRedo];
         event.type = REDO;
         event.orderID = nil;
@@ -373,68 +381,25 @@ using namespace std;
     [_eventTimer invalidate];
     _eventTimer = nil;
     
-//    NSRange cursorPosition = [textView selectedRange];
+    NSRange cursorPosition = [textView selectedRange];
     
-//    if (!_currentEvent) {
-//        
-//        _currentEvent = [[Event alloc] init];
-//    }
+    if (!_currentEvent) {
+        _currentEvent = [[Event alloc] init];
+        
+        if (_textView.text.length < _textBeforeEvent.length) {
+            
+            _currentEvent.startCursor = cursorPosition.location + 1;
+        }
+        else {
+            _currentEvent.startCursor = cursorPosition.location - 1;
+        }
+        
+    }
     
-    
-    
-//    
-//    NSLog(@"%lu", (unsigned long)cursorPosition.location);
-//    
-//    if (_activeText.length > textView.text.length) {
-//        
-//        NSLog(@"delete occured");
-//        
-//        if (!_currentEvent) {
-//            
-//            //this location will be the start of the delete
-//            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
-//            _currentEvent.type = DELETE;
-//            _currentEvent.del = YES;
-//        }
-//        else {
-//            
-//            _currentEvent.text = [NSString stringWithFormat:@"%@%@",[_activeText substringWithRange:NSMakeRange(cursorPosition.location, 1)], _currentEvent.text];
-//            _currentEvent.range = NSMakeRange(cursorPosition.location, _currentEvent.text.length);
-//        }
-//        
-//        //        if (!_currentEvent) {
-//        //
-//        //            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location, 1)]];
-//        //        }
-//        //        else {
-//        //            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
-//        //        }
-//        
-//        
-//    }
-//    else {
-//        
-//        
-//        if (_currentEvent && _currentEvent.type == DELETE) {
-//            
-//            [self prepareEvent];
-//        }
-//        
-//        if (!_currentEvent) {
-//            
-//            _currentEvent = [[Event alloc] initWithLocation:cursorPosition.location - 1 andText:[textView.text substringWithRange:NSMakeRange(cursorPosition.location - 1, 1)]];
-//            _currentEvent.type = INSERT;
-//        }
-//        else {
-//            [_currentEvent setText:[textView.text substringWithRange:NSMakeRange(_currentEvent.range.location, cursorPosition.location - _currentEvent.range.location)]];
-//            
-//            NSLog(@"setting text to: %@", _currentEvent.text);
-//        }
-//    }
-//    
     _activeText = textView.text;
     
     [self createTimer];
 }
+
 
 @end
