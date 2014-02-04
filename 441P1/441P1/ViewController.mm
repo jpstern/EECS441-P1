@@ -347,6 +347,11 @@ using namespace std;
         event.type = UNDO;
         event.orderID = nil;
         
+        if (_textView.text.length == 0) {
+            
+            event.range = NSMakeRange(0, event.range.length);
+        }
+        
         NSLog(@"undo pressed");
         
         NSLog(@"UNDOING : %@ %@", event.text, event.orderID);
@@ -403,6 +408,11 @@ using namespace std;
         Event *event = [_manager getNextRedo];
         event.type = REDO;
         event.orderID = nil;
+        
+        if (_textView.text.length == 0) {
+            
+            event.range = NSMakeRange(0, event.range.length);
+        }
         
         [_collabrifyManager sendEvent:event];
         
