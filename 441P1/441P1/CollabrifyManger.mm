@@ -10,7 +10,7 @@
 
 
 
-NSString *SESSION_NAME = @"g0000000000000005";
+NSString *SESSION_NAME = @"g0000000000000007";
 
 @interface CollabrifyManger ()
 

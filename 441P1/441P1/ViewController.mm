@@ -135,6 +135,24 @@ using namespace std;
                 event.range = NSMakeRange(event.range.location + insertedEvent.range.length, event.range.length);
             }
         }
+    }
+    else {
+        
+        for (Event *event in _manager.undoStack) {
+            
+            if (insertedEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - insertedEvent.range.length, event.range.length);
+            }
+        }
+        
+        for (Event *event in _manager.redoStack) {
+            
+            if (insertedEvent.range.location < event.range.location) {
+                
+                event.range = NSMakeRange(event.range.location - insertedEvent.range.length, event.range.length);
+            }
+        }
 
     }
 }
@@ -230,6 +248,8 @@ using namespace std;
         [_textView setText:string];
         _activeText = string;
         
+        [self fixStacksForEvent:event isDelete:YES];
+        
     }
     
     _textBeforeEvent = _textView.text;
@@ -237,7 +257,6 @@ using namespace std;
 
 - (void)receivedEvent:(Event *)event {
     
-
     NSUInteger cursorPos = _textView.selectedRange.location;
     
     if (event.range.location < cursorPos)
