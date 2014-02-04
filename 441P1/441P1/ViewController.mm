@@ -310,6 +310,11 @@ using namespace std;
         [currentText deleteCharactersInRange:range];
         _textView.text = currentText;
         _activeText=currentText;
+        
+        if ([event.submissionID intValue] != -1) {
+            
+            [self setCursorLocation:event.range.location];
+        }
     }
     else if (event.type == DELETE || (event.type == UNDO && event.del)) {
         
@@ -322,9 +327,16 @@ using namespace std;
         }
         _textView.text = currentText;
         _activeText = currentText;
+        
+        if ([event.submissionID intValue] != -1) {
+            
+            [self setCursorLocation:event.range.location + event.range.length];
+        }
     }
     
     _textBeforeEvent = _textView.text;
+    
+    
 }
 
 - (void)undoPressed:(id)sender {
