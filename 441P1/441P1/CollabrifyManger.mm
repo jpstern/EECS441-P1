@@ -367,7 +367,7 @@ NSString *SESSION_NAME = @"g000000000000002";
 
 - (void)client:(CollabrifyClient *)client sessionEnded:(int64_t)sessionID {
     
-    NSLog(@"ended");
+    NSLog(@"ended"); 
     
 }
 
