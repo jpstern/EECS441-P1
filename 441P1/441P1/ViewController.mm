@@ -122,7 +122,7 @@ using namespace std;
         
         for (Event *event in _manager.undoStack) {
             
-            if (insertedEvent.range.location < event.range.location) {
+            if (insertedEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + insertedEvent.range.length, event.range.length);
             }
@@ -130,7 +130,7 @@ using namespace std;
         
         for (Event *event in _manager.redoStack) {
             
-            if (insertedEvent.range.location < event.range.location) {
+            if (insertedEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + insertedEvent.range.length, event.range.length);
             }
@@ -140,7 +140,7 @@ using namespace std;
         
         for (Event *event in _manager.undoStack) {
             
-            if (insertedEvent.range.location < event.range.location) {
+            if (insertedEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location - insertedEvent.range.length, event.range.length);
             }
@@ -148,7 +148,7 @@ using namespace std;
         
         for (Event *event in _manager.redoStack) {
             
-            if (insertedEvent.range.location < event.range.location) {
+            if (insertedEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location - insertedEvent.range.length, event.range.length);
             }
@@ -163,7 +163,7 @@ using namespace std;
         
         for (Event *event in _manager.undoStack) {
             
-            if (redoneEvent.range.location < event.range.location) {
+            if (redoneEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
             }
@@ -171,7 +171,7 @@ using namespace std;
         
         for (Event *event in _manager.redoStack) {
             
-            if (redoneEvent.range.location < event.range.location) {
+            if (redoneEvent.range.location <= event.range.location) {
                 
                 event.range = NSMakeRange(event.range.location + redoneEvent.range.length, event.range.length);
             }
@@ -378,6 +378,8 @@ using namespace std;
     }
     
     _textBeforeEvent = _textView.text;
+    
+    [self setCursorLocation:range.location + range.length];
 }
 
 - (void)redoPressed:(id)sender {
