@@ -85,6 +85,7 @@ using namespace std;
         if (_textBeforeEvent.length < _activeText.length) {
             
             _currentEvent.type = INSERT;
+            _currentEvent.del = NO;
             _currentEvent.range = NSMakeRange(_currentEvent.startCursor, _currentEvent.endCursor - _currentEvent.startCursor);
             //NSMakeRange(_textBeforeEvent.length, _activeText.length - _textBeforeEvent.length);
             _currentEvent.text = [_activeText substringWithRange:_currentEvent.range];
@@ -92,6 +93,7 @@ using namespace std;
         else if (_textBeforeEvent.length > _activeText.length) {
             
             _currentEvent.type = DELETE;
+            _currentEvent.del = YES;
             _currentEvent.range = NSMakeRange(_currentEvent.endCursor, _currentEvent.startCursor - _currentEvent.endCursor);
             //NSMakeRange(_activeText.length, _textBeforeEvent.length - _activeText.length);
             _currentEvent.text = [_textBeforeEvent substringWithRange:_currentEvent.range];

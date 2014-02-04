@@ -10,7 +10,7 @@
 
 
 
-NSString *SESSION_NAME = @"g000000000000002";
+NSString *SESSION_NAME = @"g0000000000000005";
 
 @interface CollabrifyManger ()
 
@@ -227,6 +227,7 @@ NSString *SESSION_NAME = @"g000000000000002";
     textEvent->set_user_id(self.client.participantID);
     textEvent->set_location((int32_t)event.range.location);
     textEvent->set_type((EventType)event.type);
+    textEvent->set_delete_(event.del);
     
     std::string x = textEvent->DebugString();
     NSData *rawEvent = [self dataForEvent:textEvent];
