@@ -10,7 +10,7 @@
 
 
 
-NSString *SESSION_NAME = @"g0000000000000007";
+NSString *SESSION_NAME = @"g00000000000000001";
 
 @interface CollabrifyManger ()
 
@@ -146,8 +146,8 @@ NSString *SESSION_NAME = @"g0000000000000007";
         }
         else if (event.type == REDO && event.orderID) {
             
-
             [_delegate redoEvent:event andRemove:[event.submissionID intValue] != -1];
+            
         }
         else if (event.type == UNDO && event.orderID) {
             

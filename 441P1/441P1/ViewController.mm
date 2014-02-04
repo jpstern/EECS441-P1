@@ -223,7 +223,8 @@ using namespace std;
             NSLog(@"inserting:%@", event.text);
             [string insertString:event.text atIndex:event.range.location];
             
-            [self fixStacksForEvent:event isDelete:NO];
+            if ([event.submissionID intValue] == -1)
+                [self fixStacksForEvent:event isDelete:NO];
             
         }
         
@@ -248,7 +249,8 @@ using namespace std;
         [_textView setText:string];
         _activeText = string;
         
-        [self fixStacksForEvent:event isDelete:YES];
+        if ([event.submissionID intValue] == -1)
+            [self fixStacksForEvent:event isDelete:YES];
         
     }
     
