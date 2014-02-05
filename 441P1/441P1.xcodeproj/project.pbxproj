@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		800806F218A1F0C3008391F0 /* SessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 800806F118A1F0C3008391F0 /* SessionViewController.mm */; };
 		80962521189EEAC4003F2749 /* TextEvent.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8096251F189EEAC4003F2749 /* TextEvent.pb.cc */; };
 		80DD39F31891D95000A1D22E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F21891D95000A1D22E /* Foundation.framework */; };
 		80DD39F51891D95000A1D22E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80DD39F41891D95000A1D22E /* CoreGraphics.framework */; };
@@ -45,6 +46,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		800806F018A1F0C3008391F0 /* SessionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionViewController.h; sourceTree = "<group>"; };
+		800806F118A1F0C3008391F0 /* SessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SessionViewController.mm; sourceTree = "<group>"; };
 		8096251F189EEAC4003F2749 /* TextEvent.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEvent.pb.cc; sourceTree = "<group>"; };
 		80962520189EEAC4003F2749 /* TextEvent.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextEvent.pb.h; sourceTree = "<group>"; };
 		80DD39EF1891D95000A1D22E /* 441P1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 441P1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -203,6 +206,8 @@
 				80DD3A041891D95000A1D22E /* Main.storyboard */,
 				80DD3A071891D95000A1D22E /* ViewController.h */,
 				80DD3A081891D95000A1D22E /* ViewController.mm */,
+				800806F018A1F0C3008391F0 /* SessionViewController.h */,
+				800806F118A1F0C3008391F0 /* SessionViewController.mm */,
 				80DD3A2A1891DF8A00A1D22E /* UndoManager.h */,
 				80DD3A2B1891DF8A00A1D22E /* UndoManager.m */,
 				80DD3A271891DC6700A1D22E /* Event.h */,
@@ -480,6 +485,7 @@
 				80E4729218944CBD00363BFD /* CollabrifyManger.mm in Sources */,
 				80DD3A2C1891DF8A00A1D22E /* UndoManager.m in Sources */,
 				80DD3A031891D95000A1D22E /* AppDelegate.m in Sources */,
+				800806F218A1F0C3008391F0 /* SessionViewController.mm in Sources */,
 				80962521189EEAC4003F2749 /* TextEvent.pb.cc in Sources */,
 				80DD39FF1891D95000A1D22E /* main.m in Sources */,
 			);

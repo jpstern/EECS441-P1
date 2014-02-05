@@ -18,6 +18,9 @@ using namespace std;
 
 @protocol CollabrifyProtocol <NSObject>
 
+- (void)showError:(NSString*)error;
+- (void)sessionStarted;
+
 - (void)receivedEvent:(Event*)event;
 - (void)applyEvent:(Event *)event;
 - (void)redoEvent:(Event*)event andRemove:(BOOL)flag;
@@ -40,6 +43,8 @@ using namespace std;
 @property (nonatomic, strong) NSMutableArray *eventOrdering;
 
 @property (nonatomic, assign) NSInteger cursorPosition;
+
+- (id)initWithName:(NSString*)name andJoin:(BOOL)flag;
 
 - (void)leaveSession;
 

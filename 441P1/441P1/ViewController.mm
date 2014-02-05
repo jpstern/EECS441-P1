@@ -21,32 +21,72 @@ using namespace std;
 
 @property (nonatomic, strong) NSString *textBeforeEvent;
 
+@property (nonatomic, strong) UIView *loading;
+
 @end
 
 @implementation ViewController
+
+- (void)showError:(NSString *)error {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops!" message:error delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    
+    [alert show];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-
     _textView.text = @"";
     _activeText = @"";
     _textView.autocorrectionType = UITextAutocorrectionTypeNo;
     _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
     [_textView becomeFirstResponder];
-
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Undo" style:UIBarButtonItemStylePlain target:self action:@selector(undoPressed:)];
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStylePlain target:self action:@selector(exitSession:)], [[UIBarButtonItem alloc] initWithTitle:@"Redo" style:UIBarButtonItemStylePlain target:self action:@selector(redoPressed:)]];
+    
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithTitle:@"Undo" style:UIBarButtonItemStylePlain target:self action:@selector(undoPressed:)], [[UIBarButtonItem alloc] initWithTitle:@"Redo" style:UIBarButtonItemStylePlain target:self action:@selector(redoPressed:)]];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStylePlain target:self action:@selector(exitSession:)];
     
     _manager = [[UndoManager alloc] init];
-    _collabrifyManager = [[CollabrifyManger alloc] init];
+    _collabrifyManager = [[CollabrifyManger alloc] initWithName:_sessionName andJoin:_join];
     _collabrifyManager.delegate = self;
     
     _events = [[NSMutableArray alloc] init];
+    
+    self.title = _sessionName;
 
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    _loading = [[UIView alloc] initWithFrame:self.view.window.frame];
+    _loading.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
+    [self.view.window addSubview:_loading];
+
+    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activity.center = CGPointMake(_loading.frame.size.width / 2, _loading.frame.size.height / 2);
+    
+    [_loading addSubview:activity];
+}
+
+- (void)sessionStarted {
+    
+    [UIView animateWithDuration:0.15 animations:^{
+       
+        _loading.alpha = 0;
+        
+    } completion:^(BOOL finished) {
+        
+        [_loading removeFromSuperview];
+        _loading = nil;
+    }];
 }
 
 - (void)createTimer {
@@ -251,6 +291,8 @@ using namespace std;
 }
 
 - (void)exitSession:(id)sender {
+    
+    [self.navigationController popViewControllerAnimated:YES];
     
     [_collabrifyManager leaveSession];
 }

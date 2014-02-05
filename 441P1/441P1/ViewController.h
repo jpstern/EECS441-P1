@@ -16,6 +16,9 @@
 
 @property (nonatomic, strong) IBOutlet UITextView *textView;
 
+@property (nonatomic, strong) NSString *sessionName;
+@property (nonatomic, assign) BOOL join;
+
 @property (nonatomic, strong) CollabrifyManger *collabrifyManager;
 @property (nonatomic, strong) UndoManager *manager;
 

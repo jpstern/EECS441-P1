@@ -9,8 +9,7 @@
 #import "CollabrifyManger.h"
 
 
-
-NSString *SESSION_NAME = @"g0000000000000000000004";
+//NSString *SESSION_NAME = @"g0000000000000000000006";
 
 @interface CollabrifyManger ()
 
@@ -20,7 +19,7 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
 
 @implementation CollabrifyManger
 
-- (id)init {
+- (id)initWithName:(NSString *)name andJoin:(BOOL)flag {
     
     self = [super init];
     
@@ -39,33 +38,39 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
 
         [self setClient:client];
         
-//        SESSION_NAME = [NSString stringWithFormat:@"%@%@", SESSION_NAME, [@(rand() % 1231232) stringValue]];
-        
-        [self findSession]; //joins session or creates session
+        if (flag) {
+            [self findSession:name]; //joins session or creates session
+        }
+        else {
+            [self createSession:name];
+        }
     }
     
     return self;
 }
 
-- (void)createSession {
+- (void)createSession:(NSString*)name {
     
     
-    [[self client] createSessionWithName:SESSION_NAME
+    [[self client] createSessionWithName:name
                                 password:nil tags:@[@"EECS441"]
                              startPaused:NO
                        completionHandler:^(int64_t sessionID, CollabrifyError *error) {
                            
                            if (!error) {
                                NSLog(@"Successful Create");
+                               
+                               [_delegate sessionStarted];
                            }
                            else {
                                NSLog(@"Error Creating Session = %@", error);
-                            
+                               
+                               [_delegate showError:@"This session already exists"];
                            }
                        }];
 }
 
-- (void)findSession {
+- (void)findSession:(NSString*)name {
     
     [[self client] listSessionsWithTags:@[@"EECS441"]
                       completionHandler:^(NSArray *sessions, CollabrifyError *error) {
@@ -76,7 +81,7 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
                           
                           for (CollabrifySession *session in sessions) {
                               
-                              if ([session.sessionName isEqualToString:SESSION_NAME] && !session.hasEnded) {
+                              if ([session.sessionName isEqualToString:name] && !session.hasEnded) {
                                   
                                   [self joinSession:session];
                                   sessionFound = YES;
@@ -85,9 +90,9 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
                           
                           if (!sessionFound) {
                               
-                              [self createSession];
+                              [_delegate showError:@"This session does not exist"];
                           }
-                          
+//
                       }];
 }
 
@@ -100,8 +105,7 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
                        
                        if (!error) {
                            //update your interface;
-                           
-                           NSLog(@"%d", baseFileSize);
+                           [_delegate sessionStarted];
                        }
                    }];
 }
@@ -368,7 +372,7 @@ NSString *SESSION_NAME = @"g0000000000000000000004";
 }
 
 - (void)client:(CollabrifyClient *)client participantLeft:(CollabrifyParticipant *)participant {
-    
+        
     [[self client] leaveAndEndSession:YES completionHandler:^(BOOL success, CollabrifyError *error) {
         
     }];
