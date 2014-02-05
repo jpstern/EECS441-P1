@@ -10,7 +10,7 @@
 
 
 
-NSString *SESSION_NAME = @"g000000000000000005";
+NSString *SESSION_NAME = @"g0000000000000000000004";
 
 @interface CollabrifyManger ()
 
@@ -120,12 +120,7 @@ NSString *SESSION_NAME = @"g000000000000000005";
     NSArray *array = [_eventOrdering valueForKey:@"text"];
     NSArray *array3 = [_eventOrdering valueForKey:@"orderID"];
     
-    NSLog(@"%@", array);
-    NSLog(@"%@", array3);
-    
     _eventOrdering = [[_eventOrdering sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        
-        NSLog(@"%@ %@", [obj1 orderID], [obj2 orderID]);
         
         if ([obj1 orderID] == nil) return NSOrderedDescending;
         if ([obj2 orderID] == nil) return NSOrderedAscending;
@@ -136,8 +131,6 @@ NSString *SESSION_NAME = @"g000000000000000005";
     
     NSArray *array2 = [_eventOrdering valueForKey:@"text"];
     
-    NSLog(@"%@", array2);
-
     for (Event *event in _eventOrdering) {
         
         if (event.type == INSERT || event.type == DELETE) {
@@ -146,12 +139,13 @@ NSString *SESSION_NAME = @"g000000000000000005";
         }
         else if (event.type == REDO && event.orderID) {
             
-
             [_delegate redoEvent:event andRemove:[event.submissionID intValue] != -1];
         }
         else if (event.type == UNDO && event.orderID) {
             
             [_delegate undoEvent:event andRemoveFromStack:[event.submissionID intValue] != -1];
+            
+            
         }
 
     }
@@ -204,8 +198,11 @@ NSString *SESSION_NAME = @"g000000000000000005";
 
     for (Event *event in [_eventOrdering reverseObjectEnumerator]) {
         
-        if (event.type == INSERT || event.type == DELETE)
+        if (event.type == INSERT || event.type == DELETE) {
             [_delegate undoEvent:event andRemoveFromStack:NO];
+            
+            [self fixEventOrderingForEvent:event];
+        }
     
         if (event.orderID)
             event.confirmed = YES;
@@ -257,7 +254,7 @@ NSString *SESSION_NAME = @"g000000000000000005";
     
     for (Event *event in _pendingEvents) {
         
-        NSLog(@"processing pending event");
+        NSLog(@"processing pending event %ld %@", event.type, event.text);
         
         [self processRecievedEvent:event];
     }
@@ -310,7 +307,7 @@ NSString *SESSION_NAME = @"g000000000000000005";
     }
     else {
         
-        NSLog(@"timer is valid, adding to pending event");
+        NSLog(@"timer is valid, adding %ld %@ to pending event", event.type, event.text);
         
         [_pendingEvents addObject:event];
     }
@@ -323,18 +320,17 @@ NSString *SESSION_NAME = @"g000000000000000005";
     if ([event.participantID intValue] == self.client.participantID) {
         //need to confirm my event
         
-        NSLog(@"confirming own event");
+        NSLog(@"confirming event mode %ld text %@", (long)event.type, event.text);
         
         [self unwindEvents];
     }
     else {
         
-        
         event.confirmed = YES;
         
-        [self fixEventOrderingForEvent:event];
-        
         [_eventOrdering addObject:event];
+        
+//        [self fixEventOrderingForEvent:event];
         
         [_delegate receivedEvent:event];
     }
